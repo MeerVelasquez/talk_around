@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:talk_around/ui/pages/first_page.dart';
+import 'package:talk_around/ui/pages/login_page.dart';
 
 MaterialColor myPrimarySwatch = MaterialColor(0xFF997AC1, {
   50: Color(0xFFF5EEF7),
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: myPrimarySwatch,
         primaryColor: Color(0x013E6A),
       ),
-      home: const FirstPage(),
+      home: const LoginPage(),
     );
   }
 }
