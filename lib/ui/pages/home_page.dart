@@ -1,4 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -118,19 +120,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Botones
-                Container(
-                  padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MyButton('Sports', 'Messi is love'),
-                      MyButton('News', 'Covid-19'),
-                      MyButton('Programming', 'Flutter'),
-                      MyButton('Animals', 'Cats'),
-                      MyButton('Sports', 'Messi is love'),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildClickableBox(
+                        'Sports: Messi', 'is love', 'assets/sports.jpg'),
+                    buildClickableBox(
+                        'Games', 'of the season', 'assets/games.jpg'),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildClickableBox(
+                        'AOT: ', 'Grand Finale', 'assets/aot.png'),
+                    buildClickableBox(
+                        'Tips: ', 'Treats for dogs', 'assets/perfil.jpeg'),
+                  ],
                 ),
               ],
             ),
@@ -147,54 +154,75 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color(0xFF013E6A),
         ));
   }
-}
 
-class MyButton extends StatelessWidget {
-  final String topText;
-  final String bottonText;
-
-  MyButton(this.topText, this.bottonText);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildClickableBox(String title, String description, String imagePath) {
     return InkWell(
       onTap: () {
-        // Add your onTap code here.
+        // Acción al hacer clic en el cuadro
+        print('Clic en $title');
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        width: 600,
-        height: 75,
-        margin: EdgeInsets.all(10),
+        width: 200,
+        height: 250,
         decoration: BoxDecoration(
-          color: Color(0xFFD4DFE6),
-          border: Border.all(
-            color: Color(0xFF013E6A),
-          ),
-          borderRadius: BorderRadius.circular(4),
+          color: Color(0xFF799AB1),
+          borderRadius: BorderRadius.circular(15),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            SizedBox(height: 10),
-            Text(
-              topText,
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                color: Color(0xFF799AB1),
-                fontSize: 16,
-                fontFamily: 'Montserrat',
+            // Fondo de la caja
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            // Container con la imagen en el centro
+            Positioned(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 70,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Color(0xFF234E6C)),
+                ),
+                child: Image.asset(
+                  imagePath,
+                  width: 20, // Ajusta el tamaño según tus necesidades
+                  // height: 50,
+                ),
               ),
             ),
             SizedBox(height: 10),
-            Text(
-              bottonText,
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                color: Color(0xFF013E6A),
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                fontFamily: 'Montserrat',
+            // Container con el texto en la parte inferior
+            Positioned(
+              left: 20,
+              right: 20,
+              bottom: 10,
+              height: 50,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFE7FCFD),
+                  border: Border.all(
+                    color: Color(0xFF7FA6B9),
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Center(
+                  child: Text(
+                    '$title\n$description',
+                    style: TextStyle(
+                        color: Color(0xFF013E6A),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
           ],
