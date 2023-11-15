@@ -6,6 +6,8 @@ import 'package:talk_around/ui/pages/auth/login_page.dart';
 import 'package:talk_around/ui/pages/auth/signup_page.dart';
 import 'package:talk_around/ui/pages/home_page.dart';
 import 'package:talk_around/ui/pages/profile.dart';
+import 'package:talk_around/ui/pages/chat.dart';
+import 'package:talk_around/ui/pages/intereses_page.dart';
 
 MaterialColor myPrimarySwatch = MaterialColor(0xFF997AC1, {
   50: Color(0xFFF5EEF7),
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: myPrimarySwatch,
         primaryColor: Color(0x013E6A),
       ),
-      home: const ProfilePage(),
+      home: const InteresesPage(),
     );
   }
 }
