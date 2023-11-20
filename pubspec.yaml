@@ -38,6 +38,9 @@ dependencies:
   firebase_core: ^2.21.0
   cloud_firestore: ^4.13.1
   firebase_auth: ^4.14.0
+  convex_bottom_bar: ^3.2.0
+  flutter_floating_bottom_bar: ^1.2.0
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +69,15 @@ flutter:
     - assets/login.png
     - assets/google.png
     - assets/signup.png
+    - assets/graph_1 1.png
+    - assets/Home.png
+    - assets/sports.jpg
+    - assets/games.jpg
+    - assets/aot.png
+    - assets/bgProfile.jpg
+    - assets/perfil.jpeg
+    - assets/Chat.png
+    - assets/interesesbg.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
