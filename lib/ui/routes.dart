@@ -13,7 +13,7 @@ import 'package:talk_around/ui/pages/signup_page.dart';
 abstract class AppRoutes {
   static const chat = '/chat';
   static const first = '/first';
-  static const home = '/home';
+  static const home = '/';
   static const interests = '/interests';
   static const login = '/login';
   static const profile = '/profile';

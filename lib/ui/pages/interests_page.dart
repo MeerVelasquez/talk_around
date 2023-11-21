@@ -1,4 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:talk_around/ui/routes.dart';
 
 class InterestsPage extends StatefulWidget {
   const InterestsPage({Key? key}) : super(key: key);

@@ -3,14 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:talk_around/ui/pages/first_page.dart';
-import 'package:talk_around/ui/pages/login_page.dart';
-import 'package:talk_around/ui/pages/signup_page.dart';
-import 'package:talk_around/ui/pages/home_page.dart';
-import 'package:talk_around/ui/pages/profile_page.dart';
-import 'package:talk_around/ui/pages/chat_page.dart';
-import 'package:talk_around/ui/pages/interests_page.dart';
-
 import 'package:talk_around/ui/routes.dart';
 
 MaterialColor myPrimarySwatch = MaterialColor(0xFF997AC1, {
@@ -38,9 +30,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: myPrimarySwatch,
-          primaryColor: Color(0x013E6A),
+          primaryColor: const Color(0x013E6A),
         ),
-        initialRoute: AppRoutes.first,
+        initialRoute: AppRoutes.signUp,
         getPages: appRoutes());
   }
 }
