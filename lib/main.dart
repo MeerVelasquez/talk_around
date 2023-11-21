@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:talk_around/my_app.dart';
+import 'package:loggy/loggy.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
 
+import 'package:talk_around/config_app.dart';
+import 'package:talk_around/my_app.dart';
+
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-  } catch (err) {
-    print(err);
-  }
+  await configApp();
   runApp(const MyApp());
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class InteresesPage extends StatefulWidget {
-  const InteresesPage({Key? key}) : super(key: key);
+class InterestsPage extends StatefulWidget {
+  const InterestsPage({Key? key}) : super(key: key);
 
   @override
-  _InteresesPageState createState() => _InteresesPageState();
+  _InterestsPageState createState() => _InterestsPageState();
 }
 
-class _InteresesPageState extends State<InteresesPage> {
+class _InterestsPageState extends State<InterestsPage> {
   List<String> selectedInterests = [];
 
   @override
