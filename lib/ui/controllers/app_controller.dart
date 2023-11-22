@@ -77,6 +77,10 @@ class AppController extends GetxController {
     });
   }
 
+  void goToSignUp() {
+    Get.offNamed(AppRoutes.signUp);
+  }
+
   void getStarted() {
     if (isLoggedIn) {
       Get.offNamed(AppRoutes.home);
@@ -88,6 +92,11 @@ class AppController extends GetxController {
   Future<void> signUp(
       String name, String email, String username, String password) async {
     logInfo('Controller Sign Up');
+
+    if (name.isEmpty || email.isEmpty || username.isEmpty || password.isEmpty) {
+      return Future.error('Empty fields');
+    }
+
     User user = User(
         id: null,
         name: name,
@@ -135,6 +144,10 @@ class AppController extends GetxController {
 
   Future<void> signIn(String email, String password) async {
     logInfo('Controller Sign In');
+
+    if (email.isEmpty || password.isEmpty) {
+      return Future.error('Empty fields');
+    }
 
     await _authUseCase.signIn(email, password);
     logInfo('Sign in success');

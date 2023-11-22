@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance!.addObserver(this);
+    logInfo('initState');
   }
 
   void onSubmit() async {
@@ -73,173 +73,195 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        key: _scaffoldKey,
-        body: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/signup.png'),
-                fit: BoxFit.cover,
-              ),
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Stack(
+        children: [
+          Container(
+              decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/login.png'),
+              fit: BoxFit.cover,
             ),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
+          )),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/logo.png',
+                      width: 120,
+                      height: 120,
                     ),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.blueGrey),
-                          ),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10.0),
+                    Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border:
+                                          Border.all(color: Colors.blueGrey),
+                                    ),
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Name',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(10.0),
+                                      ),
+                                      controller: _nameController,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border:
+                                          Border.all(color: Colors.blueGrey),
+                                    ),
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Email',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(10.0),
+                                      ),
+                                      controller: _emailController,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border:
+                                          Border.all(color: Colors.blueGrey),
+                                    ),
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Username',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(10.0),
+                                      ),
+                                      controller: _usernameController,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border:
+                                          Border.all(color: Colors.blueGrey),
+                                    ),
+                                    child: TextFormField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        labelText: 'Password',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(10.0),
+                                      ),
+                                      controller: _passwordController,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border:
+                                          Border.all(color: Colors.blueGrey),
+                                    ),
+                                    child: TextFormField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        labelText: 'Confirm password',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(10.0),
+                                      ),
+                                      controller: _confirmPasswordController,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                            controller: _nameController,
-                          ),
+                            SizedBox(height: 10.0),
+                            Container(
+                                width: 300,
+                                height: 50,
+                                child: ButtonPrimaryWidget(
+                                  text: 'Sign Up',
+                                  onPressed: onSubmit,
+                                )),
+                            SizedBox(height: 30.0),
+                            Container(
+                              width: 400,
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xFFE7FCFD)),
+                                ),
+                                onPressed: onSignInWithGoogle,
+                                icon: Image.asset('assets/google.png',
+                                    width: 30, height: 30),
+                                label: Row(
+                                  children: [
+                                    SizedBox(
+                                        width:
+                                            80.0), // Add spacing between icon and text
+                                    Text(
+                                      'Sign Up with Google',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF013E6A),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                            Container(
+                              width: 400,
+                              height: 50,
+                              child: TextButton(
+                                // style: ButtonStyle(
+                                //   backgroundColor:
+                                //       MaterialStateProperty.all(Color(0xFFE7FCFD)),
+                                // ),
+                                onPressed: onSignInAsAnonymous,
+                                child: Text(
+                                  'Continue as guest',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      decoration: TextDecoration.underline),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.blueGrey),
-                          ),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10.0),
-                            ),
-                            controller: _emailController,
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.blueGrey),
-                          ),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Username',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10.0),
-                            ),
-                            controller: _usernameController,
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.blueGrey),
-                          ),
-                          child: TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10.0),
-                            ),
-                            controller: _passwordController,
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.blueGrey),
-                          ),
-                          child: TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Confirm password',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10.0),
-                            ),
-                            controller: _confirmPasswordController,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Container(
-                      width: 300,
-                      height: 50,
-                      child: ButtonPrimaryWidget(
-                        text: 'Sign in',
-                        onPressed: onSubmit,
-                      )),
-                  SizedBox(height: 30.0),
-                  Container(
-                    width: 400,
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Color(0xFFE7FCFD)),
                       ),
-                      onPressed: onSignInWithGoogle,
-                      icon: Image.asset('assets/google.png',
-                          width: 30, height: 30),
-                      label: Row(
-                        children: [
-                          SizedBox(
-                              width: 80.0), // Add spacing between icon and text
-                          Text(
-                            'Sign Up with Google',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF013E6A),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ),
-                  SizedBox(height: 5.0),
-                  Container(
-                    width: 400,
-                    height: 50,
-                    child: TextButton(
-                      // style: ButtonStyle(
-                      //   backgroundColor:
-                      //       MaterialStateProperty.all(Color(0xFFE7FCFD)),
-                      // ),
-                      onPressed: onSignInAsAnonymous,
-                      child: Text(
-                        'Continue as guest',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

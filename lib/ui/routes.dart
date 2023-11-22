@@ -62,9 +62,10 @@ List<GetPage<dynamic>> appRoutes() => [
           // transitionDuration: Duration(milliseconds: 500),
           middlewares: [AuthMiddleware()]),
       GetPage(
-          name: AppRoutes.signUp,
-          page: () => const SignUpPage(),
-          // transition: Transition.leftToRightWithFade,
-          // transitionDuration: Duration(milliseconds: 500),
-          middlewares: [AuthMiddleware()]),
+        name: AppRoutes.signUp,
+        page: () => const SignUpPage(),
+        // transition: Transition.leftToRightWithFade,
+        // transitionDuration: Duration(milliseconds: 500),
+        // middlewares: [AuthMiddleware()]
+      ),
     ];
