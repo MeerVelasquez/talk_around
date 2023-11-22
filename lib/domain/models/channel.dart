@@ -11,6 +11,7 @@ class Channel {
   String updatedAt;
   double lat;
   double lng;
+  String users;
 
   Channel({
     this.id,
@@ -25,6 +26,7 @@ class Channel {
     required this.updatedAt,
     required this.lat,
     required this.lng,
+    required this.users,
   });
 
   factory Channel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,25 @@ class Channel {
       updatedAt: json['updatedAt'],
       lat: json['lat'],
       lng: json['lng'],
+      users: json['users'],
+    );
+  }
+
+  factory Channel.from(Channel channel) {
+    return Channel(
+      id: channel.id,
+      topicId: channel.topicId,
+      creatorId: channel.creatorId,
+      name: channel.name,
+      description: channel.description,
+      imageUrl: channel.imageUrl,
+      language: channel.language,
+      country: channel.country,
+      createdAt: channel.createdAt,
+      updatedAt: channel.updatedAt,
+      lat: channel.lat,
+      lng: channel.lng,
+      users: channel.users,
     );
   }
 
@@ -57,5 +78,6 @@ class Channel {
         'updatedAt': updatedAt,
         'lat': lat,
         'lng': lng,
+        'users': users,
       };
 }

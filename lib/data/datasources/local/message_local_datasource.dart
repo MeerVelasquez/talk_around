@@ -8,6 +8,9 @@ class MessageLocalDatasource {
   final String _messagesKey = 'messages';
   SharedPreferences? _prefs;
 
+  Future<List<MessageStore>> getMessagesStore() async =>
+      await _getMessagesStore();
+
   Future<List<MessageStore>> getMessagesStoreFromChannel(
           String channelId) async =>
       await _getMessagesStoreFromChannel(channelId);
@@ -55,6 +58,12 @@ class MessageLocalDatasource {
         _messagesKey,
         jsonEncode(
             messagesStoreList.map((messageStore) => messageStore.toJson())));
+  }
+
+  Future<void> setMessagesStore(List<MessageStore> messagesStore) async {
+    final SharedPreferences prefs = await _getPrefs();
+    await prefs.setString(
+        _messagesKey, jsonEncode(messagesStore.map((e) => e.toJson())));
   }
 
   Future<void> deleteMessage(String id) async {

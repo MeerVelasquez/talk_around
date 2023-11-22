@@ -8,7 +8,7 @@ class MessageUseCase {
   final MessageRepository _messageRepository = Get.find<MessageRepository>();
 
   Future<List<Message>> getMessagesFromChannel(String channelId) async {
-    return await _messageRepository.getMessagesFromChannel(String channelId);
+    return await _messageRepository.getMessagesFromChannel(channelId);
   }
 
   Future<Message> createMessage(Message message) async {

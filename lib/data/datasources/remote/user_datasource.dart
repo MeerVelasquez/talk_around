@@ -58,4 +58,42 @@ class UserDatasource {
     await _db.collection(_collection).doc(id).update(data);
     return await getUser(id);
   }
+
+  Future<void> joinChannel(String userId, String channelId) async {
+    // await _db
+    //     .collection(_collection)
+    //     .doc(userId)
+    //     .update({'channels': FieldValue.arrayUnion([channelId])});
+    DocumentReference docRef = _db.collection(_collection).doc(userId);
+    DocumentSnapshot doc = await docRef.get();
+    if (!doc.exists) {
+      return Future.error('No user with id $userId');
+    }
+    Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
+    List<dynamic> channels = userMap['channels'];
+    if (channels.contains(channelId)) {
+      return Future.error('channel $channelId already in user $userId');
+    }
+    channels.add(channelId);
+    await docRef.update({'channels': channels});
+  }
+
+  Future<void> leaveChannel(String userId, String channelId) async {
+    // await _db
+    //     .collection(_collection)
+    //     .doc(userId)
+    //     .update({'channels': FieldValue.arrayRemove([channelId])});
+    DocumentReference docRef = _db.collection(_collection).doc(userId);
+    DocumentSnapshot doc = await docRef.get();
+    if (!doc.exists) {
+      return Future.error('No user with id $userId');
+    }
+    Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
+    List<dynamic> channels = userMap['channels'];
+    if (!channels.contains(channelId)) {
+      return Future.error('channel $channelId not in user $userId');
+    }
+    channels.remove(channelId);
+    await docRef.update({'channels': channels});
+  }
 }

@@ -7,9 +7,9 @@ import 'package:talk_around/domain/repositories/channel_repository.dart';
 class ChannelUseCase {
   final ChannelRepository _channelRepository = Get.find<ChannelRepository>();
 
-  Future<List<Channel>> getChannelsFromCurrentUser() async {
-    return await _channelRepository.getChannelsFromCurrentUser();
-  }
+  // Future<List<Channel>> getChannelsFromCurrentUser() async {
+  //   return await _channelRepository.getChannelsFromCurrentUser();
+  // }
 
   Future<Channel> getChannel(String id) async {
     return await _channelRepository.getChannel(id);
@@ -19,54 +19,61 @@ class ChannelUseCase {
     return await _channelRepository.getChannelsFromUser(id);
   }
 
-  Future<List<Channel>> getChannels() async {
-    return await _channelRepository.getChannels();
+  Future<List<Channel>> getChannels(
+      {double? lat, double? lng, double? radius}) async {
+    return await _channelRepository.getChannels(
+      lat: lat,
+      lng: lng,
+      radius: radius,
+    );
   }
 
   Future<Channel> createChannel(Channel channel) async {
     return await _channelRepository.createChannel(channel);
   }
 
-  Future<Channel> updateChannel(String id, Channel channel) async {
-    return await _channelRepository.updateChannel(id, channel);
+  // Future<Channel> updateChannel(String id, Channel channel) async {
+  //   return await _channelRepository.updateChannel(id, channel);
+  // }
+
+  // Future<Channel> updatePartialChannel(
+  //   String id, {
+  //   String? topicId,
+  //   String? creatorId,
+  //   String? name,
+  //   String? description,
+  //   String? imageUrl,
+  //   String? language,
+  //   String? country,
+  //   String? createdAt,
+  //   String? updatedAt,
+  //   double? lat,
+  //   double? lng,
+  //   // String? users,
+  // }) async {
+  //   return await _channelRepository.updatePartialChannel(
+  //     id,
+  //     topicId: topicId,
+  //     creatorId: creatorId,
+  //     name: name,
+  //     description: description,
+  //     imageUrl: imageUrl,
+  //     language: language,
+  //     country: country,
+  //     createdAt: createdAt,
+  //     updatedAt: updatedAt,
+  //     lat: lat,
+  //     lng: lng,
+  //     // String? users,
+  //   );
+  // }
+
+  Future<void> joinChannel(String channelId, String userId) async {
+    return await _channelRepository.joinChannel(channelId, userId);
   }
 
-  Future<Channel> updatePartialChannel(
-    String id, {
-    String? topicId,
-    String? creatorId,
-    String? name,
-    String? description,
-    String? imageUrl,
-    String? language,
-    String? country,
-    String? createdAt,
-    String? updatedAt,
-    double? lat,
-    double? lng,
-  }) async {
-    return await _channelRepository.updatePartialChannel(
-      id,
-      topicId: topicId,
-      creatorId: creatorId,
-      name: name,
-      description: description,
-      imageUrl: imageUrl,
-      language: language,
-      country: country,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      lat: lat,
-      lng: lng,
-    );
-  }
-
-  Future<void> joinChannel(String id) async {
-    return await _channelRepository.joinChannel(id);
-  }
-
-  Future<void> leaveChannel(String id) async {
-    return await _channelRepository.leaveChannel(id);
+  Future<void> leaveChannel(String channelId, String userId) async {
+    return await _channelRepository.leaveChannel(channelId, userId);
   }
 
   Future<void> deleteChannel(String id) async {

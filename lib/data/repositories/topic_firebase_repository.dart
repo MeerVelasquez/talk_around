@@ -1,3 +1,4 @@
+import 'package:loggy/loggy.dart';
 import 'package:talk_around/data/datasources/local/topic_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/topic_datasource.dart';
 import 'package:talk_around/data/utils/network_util.dart';
@@ -26,8 +27,9 @@ class TopicFirebaseRepository implements TopicRepository {
   Future<List<Topic>> getTopics() async {
     try {
       final List<Topic> topics = await _topicDatasource.getTopics();
-      _topicLocalDatasource.setTopics(topics);
-
+      _topicLocalDatasource.setTopics(topics).catchError((err) {
+        logError(err);
+      });
       return topics;
     } catch (err) {
       if (!(await NetworkUtil.hasNetwork())) {
@@ -42,7 +44,6 @@ class TopicFirebaseRepository implements TopicRepository {
   Future<Topic> createTopic(Topic topic) async {
     final Topic newTopic = await _topicDatasource.createTopic(topic);
     _topicLocalDatasource.addTopic(newTopic);
-
     return newTopic;
   }
 

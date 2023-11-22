@@ -13,7 +13,7 @@ class UserFirebaseRepository implements UserRepository {
   @override
   Future<User> getCurrentUser() async {
     final User user = await _userLocalDatasource.getCurrentUser();
-    if (user.id == null) return user;
+    // if (user.id != null) return user;
 
     try {
       return await _userDatasource.getUser(user.id!);
@@ -111,6 +111,20 @@ class UserFirebaseRepository implements UserRepository {
         rethrow;
       }
     }
+  }
+
+  @override
+  Future<void> joinChannel(String channelId) async {
+    final User user = await _userLocalDatasource.getCurrentUser();
+    await _userDatasource.joinChannel(user.id!, channelId);
+    await _userLocalDatasource.joinChannel(channelId);
+  }
+
+  @override
+  Future<void> leaveChannel(String channelId) async {
+    final User user = await _userLocalDatasource.getCurrentUser();
+    await _userDatasource.leaveChannel(user.id!, channelId);
+    await _userLocalDatasource.leaveChannel(channelId);
   }
 
   @override

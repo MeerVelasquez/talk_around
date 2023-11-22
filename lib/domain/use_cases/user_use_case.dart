@@ -50,6 +50,14 @@ class UserUseCase {
         lng: lng);
   }
 
+  Future<void> joinChannel(String userId, String channelId) async {
+    _userRepository.joinChannel(channelId);
+  }
+
+  Future<void> leaveChannel(String userId, String channelId) async {
+    _userRepository.leaveChannel(channelId);
+  }
+
   Future<void> deleteLocalUser() async {
     return await _userRepository.deleteLocalUser();
   }

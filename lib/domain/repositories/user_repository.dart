@@ -23,5 +23,9 @@ abstract class UserRepository {
       double? lat,
       double? lng});
 
+  Future<void> joinChannel(String channelId);
+
+  Future<void> leaveChannel(String channelId);
+
   Future<void> deleteLocalUser();
 }

@@ -110,6 +110,36 @@ class UserLocalDatasource {
     prefs.setString(_userKey, jsonEncode(user.toJson()));
   }
 
+  Future<void> joinChannel(String channelId) async {
+    final SharedPreferences prefs = await _getPrefs();
+
+    final String? userString = prefs.getString(_userKey);
+    if (userString == null) return Future.error('No user in local storage');
+
+    final Map<String, dynamic> userMap = jsonDecode(userString);
+    final List<dynamic> channelsList = userMap['channels'];
+    if (channelsList.contains(channelId)) return Future.error('Already in');
+
+    channelsList.add(channelId);
+    prefs.setString(_userKey, jsonEncode(userMap));
+  }
+
+  Future<void> leaveChannel(String channelId) async {
+    final SharedPreferences prefs = await _getPrefs();
+
+    final String? userString = prefs.getString(_userKey);
+    if (userString == null) return Future.error('No user in local storage');
+
+    final Map<String, dynamic> userMap = jsonDecode(userString);
+    final List<dynamic> channelsList = userMap['channels'];
+    if (!channelsList.contains(channelId)) {
+      return Future.error('Not in this channel');
+    }
+
+    channelsList.remove(channelId);
+    prefs.setString(_userKey, jsonEncode(userMap));
+  }
+
   Future<SharedPreferences> _getPrefs() async {
     _prefs ??= await SharedPreferences.getInstance();
     return _prefs!;
