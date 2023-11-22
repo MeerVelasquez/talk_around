@@ -7,6 +7,7 @@ import 'package:talk_around/domain/use_cases/channel_use_case.dart';
 import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
+import 'package:talk_around/ui/routes.dart';
 
 class AppController extends GetxController {
   final AuthUseCase _authUseCase = Get.find<AuthUseCase>();
@@ -29,25 +30,82 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _authUseCase.isLoggedIn().then((value) {
-      _isLoggedIn.value = value;
-    }).catchError((err) {
-      _isLoggedIn.value = false;
-      logError(err);
-    });
+    run() async {
+      try {
+        _isLoggedIn.value = await _authUseCase.isLoggedIn();
+      } catch (err) {
+        _isLoggedIn.value = false;
+        logError(err);
+      }
 
-    _userUseCase.getCurrentUser().then((value) {
-      _currentUser.value = value;
-    }).catchError((err) {
-      _currentUser.value = null;
-      logError(err);
-    });
+      try {
+        await getCurrentUser();
+      } catch (err) {
+        logError(err);
+      }
+
+      _authUseCase.subscribeAuthChanges((User? user) {
+        _isLoggedIn.value = user != null;
+        _user.value = user;
+
+        logInfo('Auth changes: ${_isLoggedIn.value}');
+
+        if (isLoggedIn) {
+          if ([AppRoutes.signIn, AppRoutes.signUp].contains(Get.currentRoute)) {
+            Get.offNamed(AppRoutes.home);
+          }
+        } else {
+          if (![AppRoutes.signIn, AppRoutes.signUp]
+              .contains(Get.currentRoute)) {
+            Get.offNamed(AppRoutes.signIn);
+          }
+        }
+      });
+    }
+
+    run().catchError(logError);
   }
 
-  Future<void> signIn(String email, String password) async {
+  void getStarted() {
+    if (isLoggedIn) {
+      Get.offNamed(AppRoutes.home);
+    } else {
+      Get.offNamed(AppRoutes.signIn);
+    }
+  }
+
+  Future<void> signUp(
+      String name, String email, String username, String password) async {
+    logInfo('Controller Sign Up');
+    User user = User(
+        id: null,
+        name: name,
+        email: email,
+        username: username,
+        password: password,
+        geolocEnabled: false,
+        prefGeolocRadius: 100,
+        lat: 0,
+        lng: 0,
+        channels: []);
+
+    final User newUser = await _authUseCase.signUp(user);
+    logInfo('Sign up success');
+
     await _authUseCase.signIn(email, password);
+    logInfo('Sign in success');
+
+    try {
+      await _userUseCase.setLocalUser(newUser);
+    } catch (err) {
+      logError(err);
+    }
+
+    _currentUser.value = user;
     _isLoggedIn.value = true;
     if (_isAnonymous.value) _isAnonymous.value = false;
+
+    Get.offNamed(AppRoutes.home);
   }
 
   Future<void> signInWithGoogle() async {
@@ -64,15 +122,24 @@ class AppController extends GetxController {
     if (_isLoggedIn.value) _isLoggedIn.value = false;
   }
 
-  Future<void> signUp(User user) async {
-    logInfo('Controller Sign Up');
+  Future<void> signIn(String email, String password) async {
+    logInfo('Controller Sign In');
 
-    final User newUser = await _authUseCase.signUp(user);
+    await _authUseCase.signIn(email, password);
+    logInfo('Sign in success');
+
+    final User user = await _userUseCase.getUserByEmail(email);
+    try {
+      await _userUseCase.setLocalUser(user);
+    } catch (err) {
+      logError(err);
+    }
+
     _isLoggedIn.value = true;
     if (_isAnonymous.value) _isAnonymous.value = false;
-
-    await _userUseCase.setLocalUser(newUser);
     _currentUser.value = user;
+
+    Get.offNamed(AppRoutes.home);
   }
 
   Future<void> logOut() async {

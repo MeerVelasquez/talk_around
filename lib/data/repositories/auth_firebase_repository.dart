@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
 import 'package:talk_around/data/datasources/local/auth_local_datasource.dart';
@@ -10,6 +11,12 @@ import 'package:talk_around/domain/repositories/auth_repository.dart';
 class AuthFirebaseRepository implements AuthRepository {
   final AuthLocalDatasource _authLocalDatasource = AuthLocalDatasource();
   final AuthDatasource _authDatasource = AuthDatasource();
+
+  final Rx<Stream<User?>> _authChanges =
+      Rx<Stream<User?>>(const Stream.empty());
+
+  @override
+  Stream<User?> get authChanges => _authChanges.value;
 
   @override
   Future<void> signIn(String email, String password) async {

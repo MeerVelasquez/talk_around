@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: myPrimarySwatch,
           primaryColor: const Color(0x013E6A),
         ),
-        initialRoute: AppRoutes.signUp,
+        initialRoute: AppRoutes.first,
         getPages: appRoutes());
   }
 }

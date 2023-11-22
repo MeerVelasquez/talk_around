@@ -29,13 +29,9 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
   void onSubmit() async {
     try {
       BuildContext context = _scaffoldKey.currentContext!;
-
-      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
       FocusScope.of(context).requestFocus(FocusNode());
-      final FormState? form = _formKey.currentState;
 
-      // Save form
-      print(form);
+      final FormState? form = _formKey.currentState;
       form!.save();
 
       await _appController.signIn(

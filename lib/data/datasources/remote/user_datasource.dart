@@ -6,14 +6,15 @@ class UserDatasource {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _collection = 'user';
 
-  Future<User> getUser(String id) async {
-    DocumentSnapshot doc = await _db.collection(_collection).doc(id).get();
-    if (!doc.exists) {
-      return Future.error('No user with id $id');
+  Future<User> getUser(String id) async => _getUser(id);
+
+  Future<User> getUserByEmail(String email) async {
+    List<User> users = await _getUsers({'email': email});
+    if (users.length != 1) {
+      return Future.error('${users.length} users with email $email}');
     }
-    Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
-    userMap['id'] = doc.id;
-    return User.fromJson(userMap);
+
+    return users[0];
   }
 
   // Future<User> createUser(User user) async {}
@@ -56,7 +57,7 @@ class UserDatasource {
     };
 
     await _db.collection(_collection).doc(id).update(data);
-    return await getUser(id);
+    return await _getUser(id);
   }
 
   Future<void> joinChannel(String userId, String channelId) async {
@@ -95,5 +96,32 @@ class UserDatasource {
     }
     channels.remove(channelId);
     await docRef.update({'channels': channels});
+  }
+
+  Future<User> _getUser(String id) async {
+    DocumentSnapshot doc = await _db.collection(_collection).doc(id).get();
+    if (!doc.exists) {
+      return Future.error('No user with id $id');
+    }
+    Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
+    userMap['id'] = doc.id;
+    return User.fromJson(userMap);
+  }
+
+  Future<List<User>> _getUsers(Map<String, dynamic> filter) async {
+    try {
+      Query query = _db.collection(_collection);
+      for (String key in filter.keys) {
+        query = query.where(key, isEqualTo: filter[key]);
+      }
+
+      return (await query.get()).docs.map((doc) {
+        Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
+        userMap['id'] = doc.id;
+        return User.fromJson(userMap);
+      }).toList();
+    } catch (err) {
+      return [];
+    }
   }
 }

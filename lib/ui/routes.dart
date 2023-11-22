@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:talk_around/ui/middlewares/auth_middleware.dart';
 
 import 'package:talk_around/ui/pages/chat_page.dart';
 import 'package:talk_around/ui/pages/first_page.dart';
@@ -36,19 +37,17 @@ List<GetPage<dynamic>> appRoutes() => [
         // middlewares: []
       ),
       GetPage(
-        name: AppRoutes.home,
-        page: () => const HomePage(),
-        // transition: Transition.leftToRightWithFade,
-        // transitionDuration: Duration(milliseconds: 500),
-        // middlewares: []
-      ),
+          name: AppRoutes.home,
+          page: () => const HomePage(),
+          // transition: Transition.leftToRightWithFade,
+          // transitionDuration: Duration(milliseconds: 500),
+          middlewares: [AuthMiddleware()]),
       GetPage(
-        name: AppRoutes.interests,
-        page: () => const InterestsPage(),
-        // transition: Transition.leftToRightWithFade,
-        // transitionDuration: Duration(milliseconds: 500),
-        // middlewares: []
-      ),
+          name: AppRoutes.interests,
+          page: () => const InterestsPage(),
+          // transition: Transition.leftToRightWithFade,
+          // transitionDuration: Duration(milliseconds: 500),
+          middlewares: [AuthMiddleware()]),
       GetPage(
         name: AppRoutes.signIn,
         page: () => const SignInPage(),
@@ -57,17 +56,15 @@ List<GetPage<dynamic>> appRoutes() => [
         // middlewares: []
       ),
       GetPage(
-        name: AppRoutes.profile,
-        page: () => const ProfilePage(),
-        // transition: Transition.leftToRightWithFade,
-        // transitionDuration: Duration(milliseconds: 500),
-        // middlewares: []
-      ),
+          name: AppRoutes.profile,
+          page: () => const ProfilePage(),
+          // transition: Transition.leftToRightWithFade,
+          // transitionDuration: Duration(milliseconds: 500),
+          middlewares: [AuthMiddleware()]),
       GetPage(
-        name: AppRoutes.signUp,
-        page: () => const SignUpPage(),
-        // transition: Transition.leftToRightWithFade,
-        // transitionDuration: Duration(milliseconds: 500),
-        // middlewares: []
-      ),
+          name: AppRoutes.signUp,
+          page: () => const SignUpPage(),
+          // transition: Transition.leftToRightWithFade,
+          // transitionDuration: Duration(milliseconds: 500),
+          middlewares: [AuthMiddleware()]),
     ];

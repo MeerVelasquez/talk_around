@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:loggy/loggy.dart';
 
 import 'package:talk_around/domain/models/user.dart';
 import 'package:talk_around/domain/repositories/user_repository.dart';
@@ -9,10 +10,20 @@ class UserUseCase {
 
   Future<User> getCurrentUser() async {
     return await _userRepository.getCurrentUser();
+    // try {
+    // } catch (err) {
+    //   logError(err);
+    //   logInfo('jsjsjsjjs');
+    //   return User.defaultUser();
+    // }
   }
 
   Future<User> getUser(String id) async {
     return await _userRepository.getUser(id);
+  }
+
+  Future<User> getUserByEmail(String email) async {
+    return await _userRepository.getUserByEmail(email);
   }
 
   // Future<User> createUser(User user) async {

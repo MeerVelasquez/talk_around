@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
+import 'package:talk_around/domain/models/user.dart';
 
 import 'package:talk_around/ui/controllers/app_controller.dart';
+import 'package:talk_around/ui/routes.dart';
+import 'package:talk_around/ui/widgets/button_primary_widget.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -33,17 +36,17 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   void onSubmit() async {
     try {
       BuildContext context = _scaffoldKey.currentContext!;
-
-      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
       FocusScope.of(context).requestFocus(FocusNode());
-      final FormState? form = _formKey.currentState;
 
-      // Save form
-      print(form);
+      final FormState? form = _formKey.currentState;
       form!.save();
 
-      await _appController.signIn(
-          _emailController.text.trim(), _passwordController.text);
+      await _appController.signUp(
+        _nameController.text.trim(),
+        _emailController.text.trim(),
+        _usernameController.text.trim(),
+        _passwordController.text,
+      );
     } catch (err) {
       logError(err);
       return;
@@ -146,6 +149,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                             border: Border.all(color: Colors.blueGrey),
                           ),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               border: InputBorder.none,
@@ -161,6 +165,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                             border: Border.all(color: Colors.blueGrey),
                           ),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Confirm password',
                               border: InputBorder.none,
@@ -174,22 +179,12 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                   ),
                   SizedBox(height: 10.0),
                   Container(
-                    width: 300,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFF013E6A))),
+                      width: 300,
+                      height: 50,
+                      child: ButtonPrimaryWidget(
+                        text: 'Sign in',
                         onPressed: onSubmit,
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFE7FCFD)),
-                        )),
-                  ),
+                      )),
                   SizedBox(height: 30.0),
                   Container(
                     width: 400,
@@ -223,28 +218,20 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                   Container(
                     width: 400,
                     height: 50,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Color(0xFFE7FCFD)),
-                      ),
+                    child: TextButton(
+                      // style: ButtonStyle(
+                      //   backgroundColor:
+                      //       MaterialStateProperty.all(Color(0xFFE7FCFD)),
+                      // ),
                       onPressed: onSignInAsAnonymous,
-                      icon: Image.asset('assets/google.png',
-                          width: 30, height: 30),
-                      label: Row(
-                        children: [
-                          SizedBox(
-                              width: 80.0), // Add spacing between icon and text
-                          Text(
-                            'Continue as guest',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF013E6A),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        'Continue as guest',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                   ),

@@ -76,15 +76,19 @@ class AuthDatasource {
   }
 
   Future<List<User>> _getUsers(Map<String, dynamic> filter) async {
-    Query query = _db.collection(_collection);
-    for (String key in filter.keys) {
-      query = query.where(key, isEqualTo: filter[key]);
-    }
+    try {
+      Query query = _db.collection(_collection);
+      for (String key in filter.keys) {
+        query = query.where(key, isEqualTo: filter[key]);
+      }
 
-    return (await query.get()).docs.map((doc) {
-      Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
-      userMap['id'] = doc.id;
-      return User.fromJson(userMap);
-    }).toList();
+      return (await query.get()).docs.map((doc) {
+        Map<String, dynamic> userMap = doc.data() as Map<String, dynamic>;
+        userMap['id'] = doc.id;
+        return User.fromJson(userMap);
+      }).toList();
+    } catch (err) {
+      return [];
+    }
   }
 }

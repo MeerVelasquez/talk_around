@@ -41,7 +41,11 @@ Future<void> configApp() async {
     logError(err);
   }
 
-  Get.put<AppController>(AppController());
+  Get.put<AuthRepository>(AuthFirebaseRepository());
+  Get.put<ChannelRepository>(ChannelFirebaseRepository());
+  Get.put<MessageRepository>(MessageFirebaseRepository());
+  Get.put<TopicRepository>(TopicFirebaseRepository());
+  Get.put<UserRepository>(UserFirebaseRepository());
 
   Get.put<AuthUseCase>(AuthUseCase());
   Get.put<ChannelUseCase>(ChannelUseCase());
@@ -49,9 +53,5 @@ Future<void> configApp() async {
   Get.put<TopicUseCase>(TopicUseCase());
   Get.put<UserUseCase>(UserUseCase());
 
-  Get.put<AuthRepository>(AuthFirebaseRepository());
-  Get.put<ChannelRepository>(ChannelFirebaseRepository());
-  Get.put<MessageRepository>(MessageFirebaseRepository());
-  Get.put<TopicRepository>(TopicFirebaseRepository());
-  Get.put<UserRepository>(UserFirebaseRepository());
+  Get.put<AppController>(AppController());
 }

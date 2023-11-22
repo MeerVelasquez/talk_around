@@ -37,6 +37,11 @@ class UserFirebaseRepository implements UserRepository {
     }
   }
 
+  @override
+  Future<User> getUserByEmail(String email) async {
+    return await _userDatasource.getUserByEmail(email);
+  }
+
   //@override
   //Future<User> createUser(User user) async {}
 

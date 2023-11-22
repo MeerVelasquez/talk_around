@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:talk_around/domain/models/user.dart';
 
@@ -7,6 +9,10 @@ import 'package:talk_around/domain/repositories/auth_repository.dart';
 class AuthUseCase {
   final AuthRepository _authRepository = Get.find<AuthRepository>();
   // final AuthFirebaseRepository _authRepository = AuthFirebaseRepository();
+
+  StreamSubscription<User?> subscribeAuthChanges(void Function(User?) onData) {
+    return _authRepository.authChanges.listen(onData);
+  }
 
   Future<void> signIn(String email, String password) async {
     await _authRepository.signIn(email, password);

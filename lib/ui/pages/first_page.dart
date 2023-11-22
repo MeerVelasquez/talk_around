@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/pages/sign_in_page.dart';
+import 'package:talk_around/ui/widgets/button_primary_widget.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -10,13 +12,19 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  @override
+  final AppController _appController = Get.find<AppController>();
+
+  // @override
   // void initState() {
   //   super.initState();
   //   Future.delayed(Duration(seconds: 3), () {
   //     Get.off(() => const LoginPage());
   //   });
   // }
+
+  void onGetStarted() {
+    _appController.getStarted();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +69,10 @@ class _FirstPageState extends State<FirstPage> {
                   ),
                 ),
                 SizedBox(height: 25),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed('/login');
-                  },
-                  child: Text('Login'),
+                ButtonPrimaryWidget(
+                  onPressed: onGetStarted,
+                  text: 'Get Started',
+                  fontSize: 20,
                 ),
               ],
             ),
