@@ -1,5 +1,7 @@
 // import 'package:talk_around/domain/models/channel.dart';
 
+import 'package:loggy/loggy.dart';
+
 class User {
   String? id;
   String name;
@@ -48,7 +50,7 @@ class User {
         prefGeolocRadius: json["prefGeolocRadius"] ?? 0,
         lat: json["lat"] ?? 0,
         lng: json["lng"] ?? 0,
-        channels: json["channels"] ?? [],
+        channels: List<String>.from(json["channels"] as List),
       );
 
   factory User.from(User user) => User(

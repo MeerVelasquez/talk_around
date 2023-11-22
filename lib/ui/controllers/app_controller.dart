@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/domain/models/user.dart';
+import 'package:talk_around/domain/repositories/auth_repository.dart';
 
 import 'package:talk_around/domain/use_cases/auth_use_case.dart';
 import 'package:talk_around/domain/use_cases/channel_use_case.dart';
@@ -31,39 +32,49 @@ class AppController extends GetxController {
     super.onInit();
 
     run() async {
-      try {
-        _isLoggedIn.value = await _authUseCase.isLoggedIn();
-      } catch (err) {
-        _isLoggedIn.value = false;
-        logError(err);
-      }
-
+      // try {
+      //   _isLoggedIn.value = await _authUseCase.isLoggedIn();
+      // } catch (err) {
+      //   _isLoggedIn.value = false;
+      //   logError(err);
+      // }
       try {
         await getCurrentUser();
       } catch (err) {
         logError(err);
       }
-
-      _authUseCase.subscribeAuthChanges((User? user) {
-        _isLoggedIn.value = user != null;
-        _user.value = user;
-
-        logInfo('Auth changes: ${_isLoggedIn.value}');
-
-        if (isLoggedIn) {
-          if ([AppRoutes.signIn, AppRoutes.signUp].contains(Get.currentRoute)) {
-            Get.offNamed(AppRoutes.home);
-          }
-        } else {
-          if (![AppRoutes.signIn, AppRoutes.signUp]
-              .contains(Get.currentRoute)) {
-            Get.offNamed(AppRoutes.signIn);
-          }
-        }
-      });
     }
 
     run().catchError(logError);
+
+    _authUseCase.authChanges.listen((AuthChangeData? authChangeData) async {
+      if (authChangeData == null) {
+        logInfo('Not logged in');
+        if (_isLoggedIn.value) _isLoggedIn.value = false;
+        if (_isAnonymous.value) _isAnonymous.value = false;
+        return;
+      }
+
+      if (authChangeData.isAnonymous) {
+        logInfo('Logged in as anonymous');
+        if (!_isAnonymous.value) _isAnonymous.value = true;
+        if (_isLoggedIn.value) _isLoggedIn.value = false;
+      } else {
+        logInfo('Logged in as ${authChangeData.email}');
+        if (_isAnonymous.value) _isAnonymous.value = false;
+        if (!_isLoggedIn.value) _isLoggedIn.value = true;
+      }
+
+      if (isLoggedIn || isAnonymous) {
+        if ([AppRoutes.signIn, AppRoutes.signUp].contains(Get.currentRoute)) {
+          Get.offNamed(AppRoutes.home);
+        }
+      } else {
+        if (![AppRoutes.signIn, AppRoutes.signUp].contains(Get.currentRoute)) {
+          Get.offNamed(AppRoutes.signIn);
+        }
+      }
+    });
   }
 
   void getStarted() {

@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:talk_around/ui/widgets/drawer_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
         //     ),
         //   ],
         // ),
+        drawer: DrawerWidget(),
         body: Stack(
           children: [
             // Fondo de imagen

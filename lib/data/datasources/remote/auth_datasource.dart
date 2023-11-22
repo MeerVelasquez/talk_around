@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -13,6 +14,14 @@ class AuthDatasource {
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _collection = 'user';
+
+  final Rx<firebase_auth.User?> authChanges = Rx<firebase_auth.User?>(null);
+
+  AuthDatasource() {
+    _auth.authStateChanges().listen((firebase_auth.User? user) {
+      authChanges.value = user;
+    });
+  }
 
   Future<void> signIn(String email, String password) async {
     // validate user existance in Firestore
@@ -59,21 +68,9 @@ class AuthDatasource {
     await _auth.signOut();
   }
 
-  Future<bool> isLoggedIn() async {
-    final Completer<bool> completer = Completer<bool>();
-
-    _auth.authStateChanges().listen((firebase_auth.User? user) {
-      if (user != null) {
-        completer.complete(true);
-        logInfo('User is signed in!');
-      } else {
-        completer.complete(false);
-        logInfo('User is currently signed out!');
-      }
-    });
-
-    return completer.future;
-  }
+  // Future<bool> isLoggedIn() async {
+  //   return _isLoggedIn.value;
+  // }
 
   Future<List<User>> _getUsers(Map<String, dynamic> filter) async {
     try {

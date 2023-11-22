@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:talk_around/domain/models/user.dart';
 
 abstract class AuthRepository {
-  Stream<User?> get authChanges;
+  Stream<AuthChangeData?> get authChanges;
 
   Future<void> signIn(String email, String password);
 
@@ -13,5 +15,12 @@ abstract class AuthRepository {
 
   Future<void> logOut();
 
-  Future<bool> isLoggedIn();
+  // Future<bool> isLoggedIn();
+}
+
+class AuthChangeData {
+  final String? email;
+  final bool isAnonymous;
+
+  const AuthChangeData(this.email, this.isAnonymous);
 }

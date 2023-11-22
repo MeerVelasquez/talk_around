@@ -11,7 +11,7 @@ class Channel {
   String updatedAt;
   double lat;
   double lng;
-  String users;
+  List<String> users;
 
   Channel({
     this.id,
@@ -43,7 +43,7 @@ class Channel {
       updatedAt: json['updatedAt'],
       lat: json['lat'],
       lng: json['lng'],
-      users: json['users'],
+      users: List<String>.from(json['users'] as List),
     );
   }
 
