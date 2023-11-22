@@ -1,7 +1,7 @@
 import 'package:talk_around/domain/models/channel.dart';
 
 abstract class ChannelRepository {
-  Future<List<Channel>> getChannelsFromCurrUser();
+  Future<List<Channel>> getChannelsFromCurrentUser();
 
   Future<Channel> getChannel(String id);
 

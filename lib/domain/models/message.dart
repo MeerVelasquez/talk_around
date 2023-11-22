@@ -1,10 +1,10 @@
 class Message {
-  final String? id;
-  final String text;
-  final String senderId;
-  final String channelId;
-  final DateTime createdAt;
-  final bool deleted;
+  String? id;
+  String text;
+  String senderId;
+  String channelId;
+  DateTime createdAt;
+  bool deleted;
 
   Message({
     this.id,

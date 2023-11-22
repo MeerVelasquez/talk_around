@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:talk_around/ui/controllers/app_controller.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -12,7 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
-  final AppController appController = Get.find<AppController>();
+  final AppController _appController = Get.find<AppController>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -42,13 +42,26 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
       print(form);
       form!.save();
 
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-      } catch (err) {
-        logError(err);
-        return;
-      }
+      await _appController.signIn(
+          _emailController.text.trim(), _passwordController.text);
+    } catch (err) {
+      logError(err);
+      return;
+    }
+  }
+
+  void onSignInWithGoogle() async {
+    try {
+      await _appController.signInWithGoogle();
+    } catch (err) {
+      logError(err);
+      return;
+    }
+  }
+
+  void onSignInAsAnonymous() async {
+    try {
+      await _appController.signInAsAnonymous();
     } catch (err) {
       logError(err);
       return;
@@ -186,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                         backgroundColor:
                             MaterialStateProperty.all(Color(0xFFE7FCFD)),
                       ),
-                      onPressed: () {},
+                      onPressed: onSignInWithGoogle,
                       icon: Image.asset('assets/google.png',
                           width: 30, height: 30),
                       label: Row(
@@ -195,6 +208,35 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                               width: 80.0), // Add spacing between icon and text
                           Text(
                             'Sign Up with Google',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF013E6A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Container(
+                    width: 400,
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Color(0xFFE7FCFD)),
+                      ),
+                      onPressed: onSignInAsAnonymous,
+                      icon: Image.asset('assets/google.png',
+                          width: 30, height: 30),
+                      label: Row(
+                        children: [
+                          SizedBox(
+                              width: 80.0), // Add spacing between icon and text
+                          Text(
+                            'Continue as guest',
                             style: TextStyle(
                               fontSize: 14,
                               fontFamily: 'Montserrat',

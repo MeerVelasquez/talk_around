@@ -1,18 +1,19 @@
 import 'package:talk_around/domain/models/user.dart';
 
 abstract class UserRepository {
-  Future<User> getCurrUser();
+  Future<User> getCurrentUser();
 
   Future<User> getUser(String id);
 
-  Future<User> createUser(User user);
+  // Future<User> createUser(User user);
 
-  Future<List<User>> getUsersFromChannel(String channelId,
-      {int? prefGeolocRadius});
+  Future<List<User>> getUsersFromChannel(String channelId);
 
-  Future<User> updateCurrUser(User user);
+  Future<void> setLocalUser(User user);
 
-  Future<User> updatePartialCurrUser(
+  // Future<User> updateCurrentUser(String id, User user);
+
+  Future<User> updatePartialCurrentUser(String id,
       {String? name,
       String? email,
       String? username,
@@ -22,5 +23,5 @@ abstract class UserRepository {
       double? lat,
       double? lng});
 
-  Future<void> deleteCurrUser();
+  Future<void> deleteLocalUser();
 }

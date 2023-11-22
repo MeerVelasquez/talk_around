@@ -1,13 +1,15 @@
+import 'package:talk_around/domain/models/user.dart';
+
 abstract class AuthRepository {
-  Future<String> login(String email, String password);
+  Future<void> signIn(String email, String password);
 
-  Future<String> loginWithGoogle();
+  Future<void> signInWithGoogle();
 
-  Future<void> signUp(String email, String password);
+  Future<void> signInAsAnonymous();
 
-  Future<void> signUpWithGoogle();
+  Future<User> signUp(User user);
 
-  Future<bool> logOut();
+  Future<void> logOut();
 
   Future<bool> isLoggedIn();
 }

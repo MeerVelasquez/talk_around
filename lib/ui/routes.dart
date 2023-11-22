@@ -4,9 +4,9 @@ import 'package:talk_around/ui/pages/chat_page.dart';
 import 'package:talk_around/ui/pages/first_page.dart';
 import 'package:talk_around/ui/pages/home_page.dart';
 import 'package:talk_around/ui/pages/interests_page.dart';
-import 'package:talk_around/ui/pages/login_page.dart';
+import 'package:talk_around/ui/pages/sign_in_page.dart';
 import 'package:talk_around/ui/pages/profile_page.dart';
-import 'package:talk_around/ui/pages/signup_page.dart';
+import 'package:talk_around/ui/pages/sign_up_page.dart';
 
 // import 'package:talk_around/ui/middlewares/auth_middleware.dart';
 
@@ -15,7 +15,7 @@ abstract class AppRoutes {
   static const first = '/first';
   static const home = '/';
   static const interests = '/interests';
-  static const login = '/login';
+  static const signIn = '/sign-in';
   static const profile = '/profile';
   static const signUp = '/sign-up';
 }
@@ -50,8 +50,8 @@ List<GetPage<dynamic>> appRoutes() => [
         // middlewares: []
       ),
       GetPage(
-        name: AppRoutes.login,
-        page: () => const LoginPage(),
+        name: AppRoutes.signIn,
+        page: () => const SignInPage(),
         // transition: Transition.leftToRightWithFade,
         // transitionDuration: Duration(milliseconds: 500),
         // middlewares: []

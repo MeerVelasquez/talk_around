@@ -20,6 +20,15 @@ class Topic {
     );
   }
 
+  factory Topic.from(Topic topic) {
+    return Topic(
+      id: topic.id,
+      title: topic.title,
+      description: topic.description,
+      imageUrl: topic.imageUrl,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,

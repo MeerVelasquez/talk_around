@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:talk_around/domain/models/user.dart';
 
 // import 'package:talk_around/data/repositories/auth_firebase_repository.dart';
 import 'package:talk_around/domain/repositories/auth_repository.dart';
@@ -7,19 +8,27 @@ class AuthUseCase {
   final AuthRepository _authRepository = Get.find<AuthRepository>();
   // final AuthFirebaseRepository _authRepository = AuthFirebaseRepository();
 
-  Future<String> login(String email, String password) async =>
-      await _authRepository.login(email, password);
+  Future<void> signIn(String email, String password) async {
+    await _authRepository.signIn(email, password);
+  }
 
-  Future<String> loginWithGoogle() async =>
-      await _authRepository.loginWithGoogle();
+  Future<void> signInWithGoogle() async {
+    await _authRepository.signInWithGoogle();
+  }
 
-  Future<void> signUp(String email, String password) async =>
-      await _authRepository.signUp(email, password);
+  Future<void> signInAsAnonymous() async {
+    await _authRepository.signInAsAnonymous();
+  }
 
-  Future<void> signUpWithGoogle() async =>
-      await _authRepository.signUpWithGoogle();
+  Future<User> signUp(User user) async {
+    return await _authRepository.signUp(user);
+  }
 
-  Future<void> logOut() async => await _authRepository.logOut();
+  Future<void> logOut() async {
+    await _authRepository.logOut();
+  }
 
-  Future<bool> isLoggedIn() async => await _authRepository.isLoggedIn();
+  Future<bool> isLoggedIn() async {
+    return await _authRepository.isLoggedIn();
+  }
 }

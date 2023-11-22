@@ -7,8 +7,8 @@ import 'package:talk_around/domain/repositories/channel_repository.dart';
 class ChannelUseCase {
   final ChannelRepository _channelRepository = Get.find<ChannelRepository>();
 
-  Future<List<Channel>> getChannelsFromCurrUser() async {
-    return await _channelRepository.getChannelsFromCurrUser();
+  Future<List<Channel>> getChannelsFromCurrentUser() async {
+    return await _channelRepository.getChannelsFromCurrentUser();
   }
 
   Future<Channel> getChannel(String id) async {

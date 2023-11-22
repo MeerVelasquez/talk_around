@@ -7,29 +7,31 @@ import 'package:talk_around/domain/repositories/user_repository.dart';
 class UserUseCase {
   final UserRepository _userRepository = Get.find<UserRepository>();
 
-  Future<User> getCurrUser() async {
-    return await _userRepository.getCurrUser();
+  Future<User> getCurrentUser() async {
+    return await _userRepository.getCurrentUser();
   }
 
   Future<User> getUser(String id) async {
     return await _userRepository.getUser(id);
   }
 
-  Future<User> createUser(User user) async {
-    return await _userRepository.createUser(user);
+  // Future<User> createUser(User user) async {
+  //   return await _userRepository.createUser(user);
+  // }
+
+  Future<List<User>> getUsersFromChannel(String channelId) async {
+    return await _userRepository.getUsersFromChannel(channelId);
   }
 
-  Future<List<User>> getUsersFromChannel(String channelId,
-      {int? prefGeolocRadius}) async {
-    return await _userRepository.getUsersFromChannel(channelId,
-        prefGeolocRadius: prefGeolocRadius);
+  Future<void> setLocalUser(User user) async {
+    return await _userRepository.setLocalUser(user);
   }
 
-  Future<User> updateCurrUser(User user) async {
-    return await _userRepository.updateCurrUser(user);
-  }
+  // Future<User> updateCurrentUser(String id, User user) async {
+  //   return await _userRepository.updateCurrentUser(id, user);
+  // }
 
-  Future<User> updatePartialCurrUser(
+  Future<User> updatePartialCurrentUser(String id,
       {String? name,
       String? email,
       String? username,
@@ -38,7 +40,7 @@ class UserUseCase {
       int? prefGeolocRadius,
       double? lat,
       double? lng}) async {
-    return await _userRepository.updatePartialCurrUser(
+    return await _userRepository.updatePartialCurrentUser(id,
         name: name,
         email: email,
         username: username,
@@ -48,7 +50,7 @@ class UserUseCase {
         lng: lng);
   }
 
-  Future<void> deleteCurrUser() async {
-    return await _userRepository.deleteCurrUser();
+  Future<void> deleteLocalUser() async {
+    return await _userRepository.deleteLocalUser();
   }
 }

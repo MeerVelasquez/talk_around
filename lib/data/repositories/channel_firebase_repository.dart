@@ -9,18 +9,25 @@ class ChannelFirebaseRepository implements ChannelRepository {
       ChannelLocalDatasource();
   final ChannelDatasource _channelDatasource = ChannelDatasource();
 
-  Future<List<Channel>> getChannelsFromCurrUser() async {}
+  @override
+  Future<List<Channel>> getChannelsFromCurrentUser() async {}
 
+  @override
   Future<Channel> getChannel(String id) async {}
 
+  @override
   Future<List<Channel>> getChannelsFromUser(String id) async {}
 
+  @override
   Future<List<Channel>> getChannels() async {}
 
+  @override
   Future<Channel> createChannel(Channel channel) async {}
 
+  @override
   Future<Channel> updateChannel(String id, Channel channel) async {}
 
+  @override
   Future<Channel> updatePartialChannel(
     String id, {
     String? topicId,
@@ -36,9 +43,12 @@ class ChannelFirebaseRepository implements ChannelRepository {
     double? lng,
   }) async {}
 
+  @override
   Future<void> joinChannel(String id) async {}
 
+  @override
   Future<void> leaveChannel(String id) async {}
 
+  @override
   Future<void> deleteChannel(String id) async {}
 }

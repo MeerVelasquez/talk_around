@@ -1,13 +1,33 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:talk_around/domain/models/user.dart';
+
 class AuthLocalDatasource {
-  Future<String> login(String email, String password) async {}
+  final String _authKey = 'auth';
+  SharedPreferences? _prefs;
 
-  Future<String> loginWithGoogle() async {}
+  Future<void> signInAsAnonymous() async {
+    final SharedPreferences prefs = await _getPrefs();
+    await prefs.setBool(_authKey, true);
+  }
 
-  Future<void> signUp(String email, String password) async {}
+  Future<bool> logOut() async {
+    final SharedPreferences prefs = await _getPrefs();
+    return await prefs.remove(_authKey);
+  }
 
-  Future<void> signUpWithGoogle() async {}
+  Future<bool> isLoggedIn() async {
+    final SharedPreferences prefs = await _getPrefs();
+    return prefs.getBool(_authKey) ?? false;
+  }
 
-  Future<bool> logOut() async {}
+  Future<bool> containsToken() async {
+    final SharedPreferences prefs = await _getPrefs();
+    return prefs.containsKey(_authKey);
+  }
 
-  Future<bool> isLoggedIn() async {}
+  Future<SharedPreferences> _getPrefs() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    return _prefs!;
+  }
 }

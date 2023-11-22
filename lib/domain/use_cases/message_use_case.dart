@@ -7,8 +7,8 @@ import 'package:talk_around/domain/repositories/message_repository.dart';
 class MessageUseCase {
   final MessageRepository _messageRepository = Get.find<MessageRepository>();
 
-  Future<List<Message>> getMessagesFromChannel() async {
-    return await _messageRepository.getMessagesFromChannel();
+  Future<List<Message>> getMessagesFromChannel(String channelId) async {
+    return await _messageRepository.getMessagesFromChannel(String channelId);
   }
 
   Future<Message> createMessage(Message message) async {

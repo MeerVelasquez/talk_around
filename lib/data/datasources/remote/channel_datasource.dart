@@ -1,7 +1,7 @@
 import 'package:talk_around/domain/models/channel.dart';
 
 class ChannelDatasource {
-  Future<List<Channel>> getChannelsFromCurrUser() async {}
+  Future<List<Channel>> getChannelsFromCurrentUser() async {}
 
   Future<Channel> getChannel(String id) async {}
 

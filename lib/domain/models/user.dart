@@ -51,6 +51,19 @@ class User {
         channels: json["channels"] ?? [],
       );
 
+  factory User.from(User user) => User(
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        password: user.password,
+        geolocEnabled: user.geolocEnabled,
+        prefGeolocRadius: user.prefGeolocRadius,
+        lat: user.lat,
+        lng: user.lng,
+        channels: user.channels,
+      );
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
