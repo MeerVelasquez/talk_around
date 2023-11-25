@@ -27,6 +27,9 @@ class AppController extends GetxController {
   User? get currentUser => _currentUser.value;
   User? get user => _currentUser.value;
 
+  final Rx<bool> _isGeolocEnabled = Rx<bool>(false);
+  bool get isGeolocEnabled => _isGeolocEnabled.value;
+
   @override
   void onInit() {
     super.onInit();
@@ -52,6 +55,10 @@ class AppController extends GetxController {
         logInfo('Not logged in');
         if (_isLoggedIn.value) _isLoggedIn.value = false;
         if (_isAnonymous.value) _isAnonymous.value = false;
+
+        await _userUseCase.deleteLocalUser();
+        _currentUser.value = null;
+        _isGeolocEnabled.value = false;
         return;
       }
 
@@ -122,6 +129,7 @@ class AppController extends GetxController {
     }
 
     _currentUser.value = user;
+    _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
     _isLoggedIn.value = true;
     if (_isAnonymous.value) _isAnonymous.value = false;
 
@@ -162,6 +170,7 @@ class AppController extends GetxController {
     _isLoggedIn.value = true;
     if (_isAnonymous.value) _isAnonymous.value = false;
     _currentUser.value = user;
+    _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
 
     Get.offNamed(AppRoutes.home);
   }
@@ -172,8 +181,37 @@ class AppController extends GetxController {
     _isLoggedIn.value = false;
     _isAnonymous.value = false;
 
+    Get.offNamed(AppRoutes.signIn);
+
     await _userUseCase.deleteLocalUser();
     _currentUser.value = null;
+    _isGeolocEnabled.value = false;
+  }
+
+  void toggleGeolocLocal(bool value) {
+    logInfo('Controller Toggle Geoloc');
+    // if (_currentUser.value == null) {
+    //   throw Exception('User is null');
+    // }
+    // _currentUser.value!.geolocEnabled = value;
+    // _currentUser.refresh();
+
+    _isGeolocEnabled.value = value;
+  }
+
+  Future<void> updateGeolocRemote() async {
+    logInfo('Controller Toggle Geoloc');
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
+      throw Exception('User or id is null');
+    }
+    if (_isGeolocEnabled.value != _currentUser.value!.geolocEnabled) {
+      _currentUser.value!.geolocEnabled = _isGeolocEnabled.value;
+      _currentUser.refresh();
+
+      await _userUseCase.updatePartialCurrentUser(_currentUser.value!.id!,
+          geolocEnabled: _isGeolocEnabled.value);
+      logInfo('Geoloc updated');
+    }
   }
 
   // void setLoggedIn() {
@@ -184,6 +222,8 @@ class AppController extends GetxController {
   Future<void> getCurrentUser() async {
     logInfo("Getting current user");
     _currentUser.value = await _userUseCase.getCurrentUser();
+    _isGeolocEnabled.value =
+        _currentUser.value != null ? _currentUser.value!.geolocEnabled : false;
   }
 
   Future<void> getUser(String id) async {
@@ -217,7 +257,9 @@ class AppController extends GetxController {
         prefGeolocRadius: prefGeolocRadius,
         lat: lat,
         lng: lng);
+
     _currentUser.value = updatedUser;
+    _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
     return updatedUser;
   }
 }

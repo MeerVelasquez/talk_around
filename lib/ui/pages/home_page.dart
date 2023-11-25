@@ -2,6 +2,9 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:loggy/loggy.dart';
+import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/widgets/drawer_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +15,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AppController _appController = Get.find<AppController>();
+
+  Future<void> onDrawerChanged(bool isOpened) async {
+    if (!isOpened) {
+      try {
+        await _appController.updateGeolocRemote();
+      } catch (err) {
+        logError(err);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +48,7 @@ class _HomePageState extends State<HomePage> {
         //   ],
         // ),
         drawer: DrawerWidget(),
+        onDrawerChanged: onDrawerChanged,
         body: Stack(
           children: [
             // Fondo de imagen

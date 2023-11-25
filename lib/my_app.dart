@@ -21,7 +21,6 @@ MaterialColor myPrimarySwatch = MaterialColor(0xFF997AC1, {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   // The first page is called here
   @override
   Widget build(BuildContext context) {

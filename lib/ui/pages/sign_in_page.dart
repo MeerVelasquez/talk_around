@@ -67,7 +67,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset('assets/logo.png'), // Your logo image
+                    Image.asset('assets/logo.png'),
                     SizedBox(height: 20.0),
                     Container(
                       padding: EdgeInsets.all(16.0),
