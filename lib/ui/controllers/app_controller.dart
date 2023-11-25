@@ -89,6 +89,7 @@ class AppController extends GetxController {
   }
 
   void getStarted() {
+    print('isLoggedIn $isLoggedIn');
     if (isLoggedIn) {
       Get.offNamed(AppRoutes.home);
     } else {

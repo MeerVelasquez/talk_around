@@ -49,117 +49,108 @@ class _HomePageState extends State<HomePage> {
         // ),
         drawer: DrawerWidget(),
         onDrawerChanged: onDrawerChanged,
-        body: Stack(
-          children: [
-            // Fondo de imagen
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      'assets/Home.png'), // Reemplaza con la ruta de tu imagen de fondo
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 100),
-                // Contenedor con imagen y texto
-                Container(
-                  width: 400,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFE7FCFD),
-                    border: Border.all(
-                      color: Color(0xFF53F2D0),
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(0, 4),
-                        blurRadius: 6,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10),
-                          Text(
-                            '¡Talk!',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 34,
-                              color: Color(0xFF013E6A),
-                            ),
-                          ),
-                          Text(
-                            'Please choose the',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            'topics that you would like',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            'to Talk Around:',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Color(0xFF013E6A),
-                            ),
-                          )
-                        ],
-                      ),
-                      Image.asset(
-                        'assets/graph_1 1.png',
-                        width: 160,
-                        height: 120,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildClickableBox(
-                        'Sports: Messi', 'is love', 'assets/sports.jpg'),
-                    buildClickableBox(
-                        'Games', 'of the season', 'assets/games.jpg'),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildClickableBox(
-                        'AOT: ', 'Grand Finale', 'assets/aot.png'),
-                    buildClickableBox(
-                        'Tips: ', 'Treats for dogs', 'assets/perfil.jpeg'),
-                  ],
-                ),
-              ],
-            ),
-          ],
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+            // child: Column(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     const SizedBox(height: 100),
+            //     // Contenedor con imagen y texto
+            //     Container(
+            //       width: 400,
+            //       height: 200,
+            //       decoration: BoxDecoration(
+            //         color: Color(0xFFE7FCFD),
+            //         border: Border.all(
+            //           color: Color(0xFF53F2D0),
+            //         ),
+            //         borderRadius: BorderRadius.circular(15),
+            //         boxShadow: [
+            //           BoxShadow(
+            //             color: Colors.black.withOpacity(0.3),
+            //             offset: Offset(0, 4),
+            //             blurRadius: 6,
+            //           ),
+            //         ],
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //         children: [
+            //           Column(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               const SizedBox(height: 10),
+            //               Text(
+            //                 '¡Talk!',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontWeight: FontWeight.w600,
+            //                   fontSize: 34,
+            //                   color: Color(0xFF013E6A),
+            //                 ),
+            //               ),
+            //               Text(
+            //                 'Please choose the',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontWeight: FontWeight.w600,
+            //                   fontSize: 18,
+            //                   color: Colors.black,
+            //                 ),
+            //               ),
+            //               Text(
+            //                 'topics that you would like',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontWeight: FontWeight.w600,
+            //                   fontSize: 18,
+            //                   color: Colors.black,
+            //                 ),
+            //               ),
+            //               Text(
+            //                 'to Talk Around:',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontWeight: FontWeight.w600,
+            //                   fontSize: 18,
+            //                   color: Color(0xFF013E6A),
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //           Image.asset(
+            //             'assets/graph_1 1.png',
+            //             width: 160,
+            //             height: 120,
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     const SizedBox(height: 20),
+            //     Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [
+            //         buildClickableBox(
+            //             'Sports: Messi', 'is love', 'assets/sports.jpg'),
+            //         buildClickableBox(
+            //             'Games', 'of the season', 'assets/games.jpg'),
+            //       ],
+            //     ),
+            //     const SizedBox(height: 20),
+            //     Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [
+            //         buildClickableBox(
+            //             'AOT: ', 'Grand Finale', 'assets/aot.png'),
+            //         buildClickableBox(
+            //             'Tips: ', 'Treats for dogs', 'assets/perfil.jpeg'),
+            //       ],
+            //     ),
+            //   ],
+            // ),
+          ),
         ),
         bottomNavigationBar: ConvexAppBar(
           items: [
@@ -215,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Container con el texto en la parte inferior
             Positioned(
               left: 20,
