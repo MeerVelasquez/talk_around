@@ -1,17 +1,19 @@
+import 'package:loggy/loggy.dart';
+
 class Channel {
   String? id;
   String topicId;
   String creatorId;
   String name;
   String description;
-  String imageUrl;
+  String? imageUrl;
   String language;
   String country;
-  String createdAt;
-  String updatedAt;
-  double lat;
-  double lng;
-  List<String> users;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  double? lat;
+  double? lng;
+  List<String>? users;
 
   Channel({
     this.id,
@@ -30,21 +32,62 @@ class Channel {
   });
 
   factory Channel.fromJson(Map<String, dynamic> json) {
+    DateTime? createdAt;
+    DateTime? updatedAt;
+    double? lat;
+    double? lng;
+    List<String>? users;
+
+    try {
+      createdAt =
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
+    } catch (err) {
+      logError('Channel.fromJson: createdAt: $err');
+    }
+
+    try {
+      updatedAt =
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
+    } catch (err) {
+      logError('Channel.fromJson: updatedAt: $err');
+    }
+
+    try {
+      lat =
+          json['lat'].runtimeType == int ? json['lat'].toDouble() : json['lat'];
+    } catch (err) {
+      logError('Channel.fromJson: lat: $err');
+    }
+
+    try {
+      lng =
+          json['lng'].runtimeType == int ? json['lng'].toDouble() : json['lng'];
+    } catch (err) {
+      logError('Channel.fromJson: lng: $err');
+    }
+
+    try {
+      users = json['users'] != null
+          ? List<String>.from(json['users'] as List)
+          : null;
+    } catch (err) {
+      logError('Channel.fromJson: users: $err');
+    }
+
     return Channel(
-      id: json['id'],
-      topicId: json['topicId'],
-      creatorId: json['creatorId'],
-      name: json['name'],
-      description: json['description'],
-      imageUrl: json['imageUrl'],
-      language: json['language'],
-      country: json['country'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      lat: json['lat'],
-      lng: json['lng'],
-      users: List<String>.from(json['users'] as List),
-    );
+        id: json['id'],
+        topicId: json['topicId'] ?? '',
+        creatorId: json['creatorId'] ?? '',
+        name: json['name'] ?? '',
+        description: json['description'] ?? '',
+        imageUrl: json['imageUrl'],
+        language: json['language'] ?? '',
+        country: json['country'] ?? '',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        lat: lat,
+        lng: lng,
+        users: users);
   }
 
   factory Channel.from(Channel channel) {

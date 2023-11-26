@@ -9,11 +9,11 @@ class User {
   String username;
   String? password;
   bool geolocEnabled;
-  int prefGeolocRadius;
-  double lat;
-  double lng;
+  int? prefGeolocRadius;
+  double? lat;
+  double? lng;
   // List<Channel> channels;
-  List<String> channels;
+  List<String>? channels;
 
   User({
     this.id,
@@ -40,18 +40,60 @@ class User {
         lng = 0,
         channels = [];
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory User.fromJson(Map<String, dynamic> json) {
+    bool geolocEnabled;
+    int? prefGeolocRadius;
+    double? lat;
+    double? lng;
+    List<String>? channels;
+
+    try {
+      geolocEnabled = json['geolocEnabled'];
+    } catch (err) {
+      geolocEnabled = true;
+      logError('User.fromJson: geolocEnabled: $err');
+    }
+
+    try {
+      prefGeolocRadius = json['prefGeolocRadius'] ?? 0;
+    } catch (err) {
+      logError('User.fromJson: prefGeolocRadius: $err');
+    }
+
+    try {
+      lat =
+          json['lat'].runtimeType == int ? json['lat'].toDouble() : json['lat'];
+    } catch (err) {
+      logError('User.fromJson: lat: $err');
+    }
+
+    try {
+      lng =
+          json['lng'].runtimeType == int ? json['lng'].toDouble() : json['lng'];
+    } catch (err) {
+      logError('User.fromJson: lng: $err');
+    }
+
+    try {
+      channels = json['channels'] != null
+          ? List<String>.from(json['channels'] as List)
+          : null;
+    } catch (err) {
+      logError(err);
+    }
+
+    return User(
         id: json["id"],
-        name: json["name"] ?? "somename",
-        email: json["email"] ?? "someemail",
-        username: json["username"] ?? "someusername",
+        name: json["name"] ?? "",
+        email: json["email"] ?? "",
+        username: json["username"] ?? "",
         password: json["password"],
-        geolocEnabled: json["geolocEnabled"] ?? true,
-        prefGeolocRadius: json["prefGeolocRadius"] ?? 0,
-        lat: json["lat"] ?? 0,
-        lng: json["lng"] ?? 0,
-        channels: List<String>.from(json["channels"] as List),
-      );
+        geolocEnabled: geolocEnabled,
+        prefGeolocRadius: prefGeolocRadius,
+        lat: lat,
+        lng: lng,
+        channels: channels);
+  }
 
   factory User.from(User user) => User(
         id: user.id,

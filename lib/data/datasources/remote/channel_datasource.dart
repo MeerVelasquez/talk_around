@@ -40,10 +40,10 @@ class ChannelDatasource {
     }).toList();
 
     if (lat != null && lng != null && radius != null) {
-      channelsList = channelsList
-          .where((e) =>
-              DataUtil.calculateDistance(lat, lng, e.lat, e.lng) < radius)
-          .toList();
+      channelsList = channelsList.where((e) {
+        if (e.lat == null || e.lng == null) return false;
+        return DataUtil.calculateDistance(lat, lng, e.lat!, e.lng!) < radius;
+      }).toList();
     }
 
     return channelsList;

@@ -85,7 +85,7 @@ class MessageFirebaseRepository implements MessageRepository {
 
     try {
       List<bool> processed = await Future.wait(futures);
-      if (processed.contains(true)) {
+      if (processed.contains(false)) {
         await _messageLocalDatasource.setMessagesStore(messagesStore);
         logInfo('Missing messages updated locally!');
       }

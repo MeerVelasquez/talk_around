@@ -4,10 +4,12 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
+import 'package:talk_around/domain/models/channel.dart';
 import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/widgets/app_bar_home_widget.dart';
 import 'package:talk_around/ui/widgets/brand_header_widget.dart';
 import 'package:talk_around/ui/widgets/drawer_widget.dart';
+import 'package:talk_around/ui/widgets/grid_channels_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,11 +18,52 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  static const String paramAvoidFetchData = 'avoid_reload_channels';
+
   final AppController _appController = Get.find<AppController>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // if (_appController.channels == null || _appController.topics == null ||
+    //     (Get.parameters[paramAvoidFetchData] ?? "false") == "false") {
+    //   try {
+    //     List<Future<void>> futures = [
+    //       _appController.fetchTopics(),
+    //       _appController.fetchChannels(),
+    //     ];
+
+    //     await Future.wait(futures);
+    //   } catch (err) {
+    //     logError(err);
+    //   }
+    // }
+
+    final List<Future<void>> futures = [];
+    if ((Get.parameters[paramAvoidFetchData] ?? "false") != "false") {
+      futures.add(_appController.fetchTopics());
+      futures.add(_appController.fetchChannels());
+    } else {
+      if (_appController.channels == null) {
+        futures.add(_appController.fetchChannels());
+      }
+      if (_appController.topics == null) {
+        futures.add(_appController.fetchTopics());
+      }
+    }
+
+    try {
+      Future.wait(futures).catchError(logError);
+    } catch (err) {
+      logError(err);
+    }
+  }
+
   Future<void> onDrawerChanged(bool isOpened) async {
+    _appController.isDrawerOpen = isOpened;
+
     if (!isOpened) {
       try {
         await _appController.updateGeolocRemote();
@@ -31,8 +74,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onPressedNotification() {
-    print('Notificaciones');
-    _scaffoldKey.currentState!.openDrawer();
+    if (_scaffoldKey.currentState != null) {
+      _scaffoldKey.currentState!.openDrawer();
+    } else {
+      logError('ScaffoldKey.currentState is null');
+    }
   }
 
   @override
@@ -40,40 +86,56 @@ class _HomePageState extends State<HomePage> {
     print('asdasda');
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBarHomeWidget(
-          onPressedNotification: onPressedNotification,
-        ),
+        appBar: AppBarHomeWidget(onPressedNotification: onPressedNotification),
         drawer: DrawerWidget(),
         onDrawerChanged: onDrawerChanged,
         body: Container(
           color: Colors.white,
           child: SafeArea(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 4),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const BrandHeaderWidget(),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildClickableBox(
-                          'Sports: Messi', 'is love', 'assets/img/sports.jpg'),
-                      buildClickableBox(
-                          'Games', 'of the season', 'assets/img/games.jpg'),
-                    ],
+                  Container(
+                    height: 200,
+                    child: GridChannelsWidget(channels: [
+                      Channel(
+                          topicId: '1',
+                          creatorId: '1',
+                          name: 'name',
+                          description: 'description',
+                          imageUrl: 'imageUrl',
+                          language: 'language',
+                          country: 'country',
+                          createdAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                          lat: 1,
+                          lng: 1,
+                          users: [])
+                    ], onTap: (Channel channel) {}),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildClickableBox(
-                          'AOT: ', 'Grand Finale', 'assets/img/aot.png'),
-                      buildClickableBox('Tips: ', 'Treats for dogs',
-                          'assets/img/perfil.jpeg'),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     buildClickableBox(
+                  //         'Sports: Messi', 'is love', 'assets/img/sports.jpg'),
+                  //     buildClickableBox(
+                  //         'Games', 'of the season', 'assets/img/games.jpg'),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 20),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     buildClickableBox(
+                  //         'AOT: ', 'Grand Finale', 'assets/img/aot.png'),
+                  //     buildClickableBox('Tips: ', 'Treats for dogs',
+                  //         'assets/img/perfil.jpeg'),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

@@ -2,7 +2,7 @@ class Topic {
   String? id;
   String title;
   String description;
-  String imageUrl;
+  String? imageUrl;
 
   Topic({
     this.id,
@@ -14,8 +14,8 @@ class Topic {
   factory Topic.fromJson(Map<String, dynamic> json) {
     return Topic(
       id: json['id'],
-      title: json['title'],
-      description: json['description'],
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
       imageUrl: json['imageUrl'],
     );
   }

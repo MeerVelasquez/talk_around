@@ -1,9 +1,11 @@
+import 'package:loggy/loggy.dart';
+
 class Message {
   String? id;
   String text;
   String senderId;
   String channelId;
-  DateTime createdAt;
+  DateTime? createdAt;
   bool deleted;
 
   Message({
@@ -16,13 +18,29 @@ class Message {
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    DateTime? createdAt;
+    bool deleted = false;
+
+    try {
+      createdAt =
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
+    } catch (err) {
+      logError('Message.fromJson: createdAt: $err');
+    }
+
+    try {
+      deleted = json['deleted'] ?? false;
+    } catch (err) {
+      logError('Message.fromJson: deleted: $err');
+    }
+
     return Message(
       id: json['id'],
-      text: json['text'],
-      senderId: json['senderId'],
-      channelId: json['channelId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      deleted: json['deleted'] ?? false,
+      text: json['text'] ?? '',
+      senderId: json['senderId'] ?? '',
+      channelId: json['channelId'] ?? '',
+      createdAt: createdAt,
+      deleted: deleted,
     );
   }
 
@@ -32,7 +50,7 @@ class Message {
       'text': text,
       'senderId': senderId,
       'channelId': channelId,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt,
       'deleted': deleted,
     };
   }

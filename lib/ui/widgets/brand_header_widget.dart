@@ -42,35 +42,30 @@ class BrandHeaderWidget extends StatelessWidget {
                   ),
                   Container(
                     width: 200,
-                    child: Flexible(
-                      //     child: Text(
-                      //   'Please choose the topics that you would like to talk around',
-                      //   style: TextStyle(
-                      //     fontFamily: 'Montserrat',
-                      //     fontWeight: FontWeight.w600,
-                      //     fontSize: 18,
-                      //     color: Colors.black,
-                      //   ),
-                      // )
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text:
+                                        'Please choose the topics that you would like to',
+                                    style: TextStyle(color: Colors.black)),
+                                TextSpan(
+                                    text: ' Talk Around',
+                                    style: TextStyle(
+                                        color: Color(0x013E6A).withOpacity(1))),
+                              ],
+                            ),
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text:
-                                    'Please choose the topics that you would like to',
-                                style: TextStyle(color: Colors.black)),
-                            TextSpan(
-                                text: ' Talk Around',
-                                style: TextStyle(
-                                    color: Color(0x013E6A).withOpacity(1))),
-                          ],
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],

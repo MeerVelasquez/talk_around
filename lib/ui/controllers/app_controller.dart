@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
+import 'package:talk_around/domain/models/channel.dart';
+import 'package:talk_around/domain/models/topic.dart';
 import 'package:talk_around/domain/models/user.dart';
 import 'package:talk_around/domain/repositories/auth_repository.dart';
 
@@ -29,6 +31,16 @@ class AppController extends GetxController {
 
   final Rx<bool> _isGeolocEnabled = Rx<bool>(false);
   bool get isGeolocEnabled => _isGeolocEnabled.value;
+
+  final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
+  List<Channel>? get channels => _channels.value;
+
+  final Rx<List<Topic>?> _topics = Rx<List<Topic>?>(null);
+  List<Topic>? get topics => _topics.value;
+
+  final Rx<bool> _isDrawerOpen = Rx<bool>(false);
+  bool get isDrawerOpen => _isDrawerOpen.value;
+  set isDrawerOpen(bool value) => _isDrawerOpen.value = value;
 
   @override
   void onInit() {
@@ -72,7 +84,7 @@ class AppController extends GetxController {
         if (!_isLoggedIn.value) _isLoggedIn.value = true;
       }
 
-      if (isLoggedIn || isAnonymous) {
+      if (_isLoggedIn.value || _isAnonymous.value) {
         if ([AppRoutes.signIn, AppRoutes.signUp].contains(Get.currentRoute)) {
           Get.offNamed(AppRoutes.home);
         }
@@ -90,7 +102,7 @@ class AppController extends GetxController {
 
   void getStarted() {
     print('isLoggedIn $isLoggedIn');
-    if (isLoggedIn) {
+    if (_isLoggedIn.value || _isAnonymous.value) {
       Get.offNamed(AppRoutes.home);
     } else {
       Get.offNamed(AppRoutes.signIn);
@@ -246,11 +258,11 @@ class AppController extends GetxController {
       double? lat,
       double? lng}) async {
     logInfo("Update user");
-    if (currentUser == null || currentUser!.id == null) {
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
       return Future.error('User or id is null');
     }
     User updatedUser = await _userUseCase.updatePartialCurrentUser(
-        currentUser!.id!,
+        _currentUser.value!.id!,
         name: name,
         email: email,
         username: username,
@@ -262,5 +274,20 @@ class AppController extends GetxController {
     _currentUser.value = updatedUser;
     _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
     return updatedUser;
+  }
+
+  Future<void> fetchChannels() async {
+    logInfo('Controller Fetch Channels');
+    // if (_isGeolocEnabled.value) {
+
+    // _channels.value = await _channelUseCase.getChannels();
+    // } else {
+    //   _channels.value = await _channelUseCase.getChannels(lat: _currentUser.value!.lat);
+    // }
+    _channels.value = await _channelUseCase.getChannels();
+  }
+
+  Future<void> fetchTopics() async {
+    _topics.value = await _topicUseCase.getTopics();
   }
 }
