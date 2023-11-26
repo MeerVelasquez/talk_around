@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/ui/controllers/app_controller.dart';
+import 'package:talk_around/ui/widgets/app_bar_home_widget.dart';
+import 'package:talk_around/ui/widgets/brand_header_widget.dart';
 import 'package:talk_around/ui/widgets/drawer_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final AppController _appController = Get.find<AppController>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> onDrawerChanged(bool isOpened) async {
     if (!isOpened) {
@@ -27,129 +30,53 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onPressedNotification() {
+    print('Notificaciones');
+    _scaffoldKey.currentState!.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('asdasda');
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Color(0xFF013E6A),
-        //   actions: [
-        //     IconButton(
-        //       onPressed: () {},
-        //       icon: Image.asset('assets/Logo.png', width: 50, height: 50),
-        //     ),
-        //     IconButton(
-        //       onPressed: () {},
-        //       icon: Icon(Icons.search),
-        //     ),
-        //     IconButton(
-        //       onPressed: () {},
-        //       icon: Icon(Icons.more_vert),
-        //     ),
-        //   ],
-        // ),
+        key: _scaffoldKey,
+        appBar: AppBarHomeWidget(
+          onPressedNotification: onPressedNotification,
+        ),
         drawer: DrawerWidget(),
         onDrawerChanged: onDrawerChanged,
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
-            // child: Column(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     const SizedBox(height: 100),
-            //     // Contenedor con imagen y texto
-            //     Container(
-            //       width: 400,
-            //       height: 200,
-            //       decoration: BoxDecoration(
-            //         color: Color(0xFFE7FCFD),
-            //         border: Border.all(
-            //           color: Color(0xFF53F2D0),
-            //         ),
-            //         borderRadius: BorderRadius.circular(15),
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: Colors.black.withOpacity(0.3),
-            //             offset: Offset(0, 4),
-            //             blurRadius: 6,
-            //           ),
-            //         ],
-            //       ),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //         children: [
-            //           Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               const SizedBox(height: 10),
-            //               Text(
-            //                 '¡Talk!',
-            //                 style: TextStyle(
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                   fontSize: 34,
-            //                   color: Color(0xFF013E6A),
-            //                 ),
-            //               ),
-            //               Text(
-            //                 'Please choose the',
-            //                 style: TextStyle(
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                   fontSize: 18,
-            //                   color: Colors.black,
-            //                 ),
-            //               ),
-            //               Text(
-            //                 'topics that you would like',
-            //                 style: TextStyle(
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                   fontSize: 18,
-            //                   color: Colors.black,
-            //                 ),
-            //               ),
-            //               Text(
-            //                 'to Talk Around:',
-            //                 style: TextStyle(
-            //                   fontFamily: 'Montserrat',
-            //                   fontWeight: FontWeight.w600,
-            //                   fontSize: 18,
-            //                   color: Color(0xFF013E6A),
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //           Image.asset(
-            //             'assets/graph_1 1.png',
-            //             width: 160,
-            //             height: 120,
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     const SizedBox(height: 20),
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //       children: [
-            //         buildClickableBox(
-            //             'Sports: Messi', 'is love', 'assets/sports.jpg'),
-            //         buildClickableBox(
-            //             'Games', 'of the season', 'assets/games.jpg'),
-            //       ],
-            //     ),
-            //     const SizedBox(height: 20),
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //       children: [
-            //         buildClickableBox(
-            //             'AOT: ', 'Grand Finale', 'assets/aot.png'),
-            //         buildClickableBox(
-            //             'Tips: ', 'Treats for dogs', 'assets/perfil.jpeg'),
-            //       ],
-            //     ),
-            //   ],
-            // ),
+        body: Container(
+          color: Colors.white,
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 4),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const BrandHeaderWidget(),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildClickableBox(
+                          'Sports: Messi', 'is love', 'assets/img/sports.jpg'),
+                      buildClickableBox(
+                          'Games', 'of the season', 'assets/img/games.jpg'),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildClickableBox(
+                          'AOT: ', 'Grand Finale', 'assets/img/aot.png'),
+                      buildClickableBox('Tips: ', 'Treats for dogs',
+                          'assets/img/perfil.jpeg'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         bottomNavigationBar: ConvexAppBar(

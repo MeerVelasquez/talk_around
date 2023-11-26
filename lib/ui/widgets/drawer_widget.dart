@@ -48,7 +48,7 @@ class DrawerWidget extends StatelessWidget {
                             backgroundColor: Colors.white,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
-                              child: Image.asset("assets/perfil.jpeg"),
+                              child: Image.asset("assets/img/perfil.jpeg"),
                             )),
                         const SizedBox(
                           height: 12,

@@ -21,7 +21,7 @@ class _InterestsPageState extends State<InterestsPage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                  'assets/interesesbg.png',
+                  'assets/img/interesesbg.png',
                 ),
                 fit: BoxFit.cover,
               ),

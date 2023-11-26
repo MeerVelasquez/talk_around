@@ -80,7 +80,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
           Container(
               decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/login.png'),
+              image: AssetImage('assets/img/login.png'),
               fit: BoxFit.cover,
             ),
           )),
@@ -91,7 +91,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/logo.png',
+                      'assets/img/logo.png',
                       width: 120,
                       height: 120,
                     ),
@@ -211,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                                       Color(0xFFE7FCFD)),
                                 ),
                                 onPressed: onSignInWithGoogle,
-                                icon: Image.asset('assets/google.png',
+                                icon: Image.asset('assets/img/google.png',
                                     width: 30, height: 30),
                                 label: Row(
                                   children: [

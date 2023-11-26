@@ -33,7 +33,7 @@ class _FirstPageState extends State<FirstPage> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/fondo.png',
+            'assets/img/fondo.png',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -43,7 +43,7 @@ class _FirstPageState extends State<FirstPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/logo.png',
+                  'assets/img/logo.png',
                   width: 360,
                   height: 365,
                   fit: BoxFit.cover,

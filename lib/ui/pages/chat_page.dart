@@ -35,7 +35,7 @@ class _ChatPageState extends State<ChatPage> {
                   width: 2,
                 ),
                 CircleAvatar(
-                  backgroundImage: AssetImage("assets/sports.jpg"),
+                  backgroundImage: AssetImage("assets/img/sports.jpg"),
                   maxRadius: 20,
                 ),
                 SizedBox(
@@ -70,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              "assets/Chat.png", // Replace with your background image
+              "assets/img/Chat.png", // Replace with your background image
               fit: BoxFit.cover,
             ),
           ),

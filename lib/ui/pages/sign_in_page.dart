@@ -54,7 +54,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/login.png'),
+              image: AssetImage('assets/img/login.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -67,7 +67,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset('assets/logo.png'),
+                    Image.asset('assets/img/logo.png'),
                     SizedBox(height: 20.0),
                     Container(
                       padding: EdgeInsets.all(16.0),
@@ -147,7 +147,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                               MaterialStateProperty.all(Color(0xFFE7FCFD)),
                         ),
                         onPressed: () {},
-                        icon: Image.asset('assets/google.png',
+                        icon: Image.asset('assets/img/google.png',
                             width: 30, height: 30),
                         label: Row(
                           children: [
