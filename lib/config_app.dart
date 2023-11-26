@@ -7,8 +7,11 @@ import 'firebase_options.dart';
 
 import 'package:talk_around/ui/controllers/app_controller.dart';
 
+import 'package:talk_around/services/locator_service.dart';
+
 import 'package:talk_around/domain/use_cases/auth_use_case.dart';
 import 'package:talk_around/domain/use_cases/channel_use_case.dart';
+import 'package:talk_around/domain/use_cases/geoloc_use_case.dart';
 import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
@@ -41,6 +44,8 @@ Future<void> configApp() async {
     logError(err);
   }
 
+  Get.put<LocatorService>(LocatorService());
+
   Get.put<AuthRepository>(AuthFirebaseRepository());
   Get.put<ChannelRepository>(ChannelFirebaseRepository());
   Get.put<MessageRepository>(MessageFirebaseRepository());
@@ -49,6 +54,7 @@ Future<void> configApp() async {
 
   Get.put<AuthUseCase>(AuthUseCase());
   Get.put<ChannelUseCase>(ChannelUseCase());
+  Get.put<GeolocUseCase>(GeolocUseCase());
   Get.put<MessageUseCase>(MessageUseCase());
   Get.put<TopicUseCase>(TopicUseCase());
   Get.put<UserUseCase>(UserUseCase());

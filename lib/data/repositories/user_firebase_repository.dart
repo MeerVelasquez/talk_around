@@ -1,7 +1,7 @@
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/data/datasources/local/user_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/user_datasource.dart';
-import 'package:talk_around/data/utils/network_util.dart';
+import 'package:talk_around/services/network_service.dart';
 
 import 'package:talk_around/domain/models/user.dart';
 import 'package:talk_around/domain/repositories/user_repository.dart';
@@ -29,7 +29,7 @@ class UserFirebaseRepository implements UserRepository {
       return await _userDatasource.getUser(id);
     } catch (err) {
       logError(err);
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _userLocalDatasource.getUser(id);
       } else {
         rethrow;
@@ -55,7 +55,7 @@ class UserFirebaseRepository implements UserRepository {
       return users;
     } catch (err) {
       logError(err);
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _userLocalDatasource.getUsersFromChannel(channelId);
       } else {
         rethrow;
@@ -93,7 +93,7 @@ class UserFirebaseRepository implements UserRepository {
       double? lat,
       double? lng}) async {
     try {
-      return await _userDatasource.updatePartialCurrentUser(id,
+      final User user = await _userDatasource.updatePartialCurrentUser(id,
           name: name,
           email: email,
           username: username,
@@ -101,9 +101,18 @@ class UserFirebaseRepository implements UserRepository {
           prefGeolocRadius: prefGeolocRadius,
           lat: lat,
           lng: lng);
+      await _userLocalDatasource.updatePartialCurrentUser(
+          name: name,
+          email: email,
+          username: username,
+          geolocEnabled: geolocEnabled,
+          prefGeolocRadius: prefGeolocRadius,
+          lat: lat,
+          lng: lng);
+      return user;
     } catch (err) {
       logError(err);
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _userLocalDatasource.updatePartialCurrentUser(
             name: name,
             email: email,

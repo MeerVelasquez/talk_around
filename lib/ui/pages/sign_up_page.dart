@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    logInfo('initState');
+    _appController.stopListeningGeoloc().catchError(logError);
   }
 
   void onSubmit() async {

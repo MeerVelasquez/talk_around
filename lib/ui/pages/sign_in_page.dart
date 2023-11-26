@@ -23,7 +23,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance!.addObserver(this);
+    _appController.stopListeningGeoloc().catchError(logError);
   }
 
   void onSubmit() async {

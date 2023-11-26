@@ -16,6 +16,9 @@ class AppBarHomeWidget extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Colors.white,
           // backgroundColor: const Color(0xFFE7FCFD),
           systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarIconBrightness: _appController.isDrawerOpen
+                ? Brightness.light
+                : Brightness.dark,
             statusBarColor: _appController.isDrawerOpen
                 ? const Color(0x013E6A).withOpacity(1)
                 : Colors.white,

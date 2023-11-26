@@ -27,21 +27,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // if (_appController.channels == null || _appController.topics == null ||
-    //     (Get.parameters[paramAvoidFetchData] ?? "false") == "false") {
-    //   try {
-    //     List<Future<void>> futures = [
-    //       _appController.fetchTopics(),
-    //       _appController.fetchChannels(),
-    //     ];
 
-    //     await Future.wait(futures);
-    //   } catch (err) {
-    //     logError(err);
-    //   }
-    // }
+    _fetchData().catchError(logError);
+    _appController.checkGeoloc().catchError(logError);
+  }
 
+  Future<void> _fetchData() async {
     final List<Future<void>> futures = [];
+
     if ((Get.parameters[paramAvoidFetchData] ?? "false") != "false") {
       futures.add(_appController.fetchTopics());
       futures.add(_appController.fetchChannels());
@@ -53,12 +46,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         futures.add(_appController.fetchTopics());
       }
     }
-
-    try {
-      Future.wait(futures).catchError(logError);
-    } catch (err) {
-      logError(err);
-    }
+    await Future.wait(futures);
   }
 
   Future<void> onDrawerChanged(bool isOpened) async {
@@ -66,7 +54,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (!isOpened) {
       try {
-        await _appController.updateGeolocRemote();
+        await _appController.saveGeolocPrefs();
       } catch (err) {
         logError(err);
       }

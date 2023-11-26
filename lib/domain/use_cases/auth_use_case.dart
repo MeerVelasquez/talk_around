@@ -10,9 +10,6 @@ class AuthUseCase {
   final AuthRepository _authRepository = Get.find<AuthRepository>();
   // final AuthFirebaseRepository _authRepository = AuthFirebaseRepository();
 
-  // StreamSubscription<User?> subscribeAuthChanges(void Function(User?) onData) {
-  //   return _authRepository.authChanges.listen(onData);
-  // }
   Stream<AuthChangeData?> get authChanges => _authRepository.authChanges;
 
   Future<void> signIn(String email, String password) async {

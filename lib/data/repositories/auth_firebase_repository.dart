@@ -5,7 +5,7 @@ import 'package:loggy/loggy.dart';
 
 import 'package:talk_around/data/datasources/local/auth_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/auth_datasource.dart';
-import 'package:talk_around/data/utils/network_util.dart';
+import 'package:talk_around/services/network_service.dart';
 import 'package:talk_around/domain/models/user.dart';
 
 import 'package:talk_around/domain/repositories/auth_repository.dart';
@@ -47,7 +47,7 @@ class AuthFirebaseRepository implements AuthRepository {
       await _authDatasource.signInAsAnonymous();
     } catch (err) {
       logError(err);
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         await _authLocalDatasource.signInAsAnonymous();
       } else {
         rethrow;

@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/domain/models/channel.dart';
 import 'package:talk_around/domain/models/topic.dart';
 import 'package:talk_around/domain/models/user.dart';
+import 'package:talk_around/domain/models/user_location.dart';
 import 'package:talk_around/domain/repositories/auth_repository.dart';
 
 import 'package:talk_around/domain/use_cases/auth_use_case.dart';
 import 'package:talk_around/domain/use_cases/channel_use_case.dart';
+import 'package:talk_around/domain/use_cases/geoloc_use_case.dart';
 import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
@@ -15,10 +19,12 @@ import 'package:talk_around/ui/routes.dart';
 class AppController extends GetxController {
   final AuthUseCase _authUseCase = Get.find<AuthUseCase>();
   final ChannelUseCase _channelUseCase = Get.find<ChannelUseCase>();
+  final GeolocUseCase _geolocUseCase = Get.find<GeolocUseCase>();
   final MessageUseCase _messageUseCase = Get.find<MessageUseCase>();
   final TopicUseCase _topicUseCase = Get.find<TopicUseCase>();
   final UserUseCase _userUseCase = Get.find<UserUseCase>();
 
+  StreamSubscription<AuthChangeData?>? _authChangesSubscription;
   final Rx<bool> _isLoggedIn = Rx<bool>(false);
   final Rx<bool> _isAnonymous = Rx<bool>(false);
   bool get isLoggedIn => _isLoggedIn.value;
@@ -29,8 +35,14 @@ class AppController extends GetxController {
   User? get currentUser => _currentUser.value;
   User? get user => _currentUser.value;
 
+  StreamSubscription<UserLocation?>? _geolocChangesSubscription;
   final Rx<bool> _isGeolocEnabled = Rx<bool>(false);
+  final Rx<int?> _geolocPrefRadius = Rx<int?>(null);
+  final Rx<bool> _geolocPrefsSaved = Rx<bool>(true);
+  final Rx<UserLocation?> _userLocation = Rx<UserLocation?>(null);
   bool get isGeolocEnabled => _isGeolocEnabled.value;
+  int? get geolocRadius => _geolocPrefRadius.value;
+  // UserLocation? get userLocation => _userLocation.value;
 
   final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
   List<Channel>? get channels => _channels.value;
@@ -46,23 +58,13 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
 
-    run() async {
-      // try {
-      //   _isLoggedIn.value = await _authUseCase.isLoggedIn();
-      // } catch (err) {
-      //   _isLoggedIn.value = false;
-      //   logError(err);
-      // }
-      try {
-        await getCurrentUser();
-      } catch (err) {
-        logError(err);
-      }
-    }
+    getCurrentUser().catchError(logError);
+    listenAuthChanges();
+  }
 
-    run().catchError(logError);
-
-    _authUseCase.authChanges.listen((AuthChangeData? authChangeData) async {
+  void listenAuthChanges() {
+    _authChangesSubscription =
+        _authUseCase.authChanges.listen((AuthChangeData? authChangeData) async {
       if (authChangeData == null) {
         logInfo('Not logged in');
         if (_isLoggedIn.value) _isLoggedIn.value = false;
@@ -71,6 +73,7 @@ class AppController extends GetxController {
         await _userUseCase.deleteLocalUser();
         _currentUser.value = null;
         _isGeolocEnabled.value = false;
+        _geolocPrefRadius.value = null;
         return;
       }
 
@@ -143,6 +146,7 @@ class AppController extends GetxController {
 
     _currentUser.value = user;
     _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
+    _geolocPrefRadius.value = _currentUser.value!.prefGeolocRadius;
     _isLoggedIn.value = true;
     if (_isAnonymous.value) _isAnonymous.value = false;
 
@@ -184,6 +188,7 @@ class AppController extends GetxController {
     if (_isAnonymous.value) _isAnonymous.value = false;
     _currentUser.value = user;
     _isGeolocEnabled.value = _currentUser.value!.geolocEnabled;
+    _geolocPrefRadius.value = _currentUser.value!.prefGeolocRadius;
 
     Get.offNamed(AppRoutes.home);
   }
@@ -201,7 +206,7 @@ class AppController extends GetxController {
     _isGeolocEnabled.value = false;
   }
 
-  void toggleGeolocLocal(bool value) {
+  void toggleGeoloc(bool value) {
     logInfo('Controller Toggle Geoloc');
     // if (_currentUser.value == null) {
     //   throw Exception('User is null');
@@ -210,20 +215,33 @@ class AppController extends GetxController {
     // _currentUser.refresh();
 
     _isGeolocEnabled.value = value;
+    if (_isLoggedIn.value) {
+      _geolocPrefsSaved.value = false;
+    }
   }
 
-  Future<void> updateGeolocRemote() async {
+  Future<void> saveGeolocPrefs() async {
     logInfo('Controller Toggle Geoloc');
-    if (_currentUser.value == null || _currentUser.value!.id == null) {
-      throw Exception('User or id is null');
-    }
-    if (_isGeolocEnabled.value != _currentUser.value!.geolocEnabled) {
-      _currentUser.value!.geolocEnabled = _isGeolocEnabled.value;
-      _currentUser.refresh();
+    if (_isLoggedIn.value) {
+      if (!_geolocPrefsSaved.value) {
+        if (_currentUser.value == null || _currentUser.value!.id == null) {
+          Future.error('User or id is null');
+        }
 
-      await _userUseCase.updatePartialCurrentUser(_currentUser.value!.id!,
-          geolocEnabled: _isGeolocEnabled.value);
-      logInfo('Geoloc updated');
+        await _userUseCase.updatePartialCurrentUser(_currentUser.value!.id!,
+            geolocEnabled: _isGeolocEnabled.value,
+            prefGeolocRadius: _geolocPrefRadius.value);
+
+        _currentUser.value!.geolocEnabled = _isGeolocEnabled.value;
+        _currentUser.value!.prefGeolocRadius = _geolocPrefRadius.value;
+        _currentUser.refresh();
+
+        _geolocPrefsSaved.value = true;
+
+        logInfo('Geoloc updated');
+      }
+    } else {
+      Future.error('Saving geoloc prefs requires user to be logged in');
     }
   }
 
@@ -289,5 +307,46 @@ class AppController extends GetxController {
 
   Future<void> fetchTopics() async {
     _topics.value = await _topicUseCase.getTopics();
+  }
+
+  Future<void> checkGeoloc() async {
+    logInfo('Controller Check Geoloc');
+    if (_isGeolocEnabled.value) {
+      if (_geolocChangesSubscription == null) {
+        try {
+          await _geolocUseCase.startStream();
+          _geolocChangesSubscription =
+              _geolocUseCase.geolocChanges.listen((UserLocation? loc) {
+            if (loc != null) {
+              _userLocation.value = loc;
+            } else {
+              _isGeolocEnabled.value = false;
+              logInfo('Couldn\'t get User Location');
+            }
+          });
+
+          logInfo('Geoloc started');
+        } catch (err) {
+          logError(err);
+          _isGeolocEnabled.value = false;
+          _geolocPrefRadius.value = null;
+        }
+      }
+    }
+  }
+
+  Future<void> stopListeningGeoloc() async {
+    logInfo('Controller Stop Listening Geoloc');
+    await _geolocUseCase.stopStream();
+    if (_geolocChangesSubscription != null) {
+      _geolocChangesSubscription!.cancel();
+      _geolocChangesSubscription = null;
+    }
+
+    _userLocation.value = null;
+    _isGeolocEnabled.value = false;
+    _geolocPrefRadius.value = null;
+
+    logInfo('Geoloc stopped');
   }
 }

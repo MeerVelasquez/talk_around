@@ -1,7 +1,7 @@
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/data/datasources/local/topic_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/topic_datasource.dart';
-import 'package:talk_around/data/utils/network_util.dart';
+import 'package:talk_around/services/network_service.dart';
 
 import 'package:talk_around/domain/models/topic.dart';
 import 'package:talk_around/domain/repositories/topic_repository.dart';
@@ -15,7 +15,7 @@ class TopicFirebaseRepository implements TopicRepository {
     try {
       return await _topicDatasource.getTopic(id);
     } catch (err) {
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _topicLocalDatasource.getTopic(id);
       } else {
         rethrow;
@@ -32,7 +32,7 @@ class TopicFirebaseRepository implements TopicRepository {
       });
       return topics;
     } catch (err) {
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _topicLocalDatasource.getTopics();
       } else {
         rethrow;

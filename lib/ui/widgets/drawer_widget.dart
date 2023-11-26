@@ -20,10 +20,28 @@ class DrawerWidget extends StatelessWidget {
 
   void onToggleGeoloc(bool value) {
     try {
-      _appController.toggleGeolocLocal(value);
+      _appController.toggleGeoloc(value);
     } catch (err) {
       logError(err);
     }
+  }
+
+  Widget getToggleGeolocWidget() => Obx(() => SizedBox(
+        width: 96,
+        height: 72,
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: Switch(
+            // This bool value toggles the switch.
+            value: _appController.isGeolocEnabled,
+            activeColor: Colors.green,
+            onChanged: onToggleGeoloc,
+          ),
+        ),
+      ));
+
+  Widget getGeolocPrefs() {
+    return Container();
   }
 
   @override
@@ -81,40 +99,32 @@ class DrawerWidget extends StatelessWidget {
                               style:
                                   TextStyle(fontSize: 24, color: Colors.white),
                             ),
-                            Obx(() => SizedBox(
-                                  width: 96,
-                                  height: 72,
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Switch(
-                                      // This bool value toggles the switch.
-                                      value: _appController.isGeolocEnabled,
-                                      activeColor: Colors.green,
-                                      onChanged: onToggleGeoloc,
-                                    ),
-                                  ),
-                                )),
+                            getToggleGeolocWidget(),
+                            getGeolocPrefs()
                           ],
                         )
                       ],
                     )
                   ],
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: onLogout,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.logout,
-                        size: 36,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Logout',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    ],
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          'Logout',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:talk_around/data/datasources/data_util.dart';
+import 'package:get/get.dart';
 
 import 'package:talk_around/domain/models/channel.dart';
+import 'package:talk_around/services/locator_service.dart';
 
 class ChannelDatasource {
+  final LocatorService _locatorService = Get.find<LocatorService>();
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _collection = 'channel';
 
@@ -42,7 +45,8 @@ class ChannelDatasource {
     if (lat != null && lng != null && radius != null) {
       channelsList = channelsList.where((e) {
         if (e.lat == null || e.lng == null) return false;
-        return DataUtil.calculateDistance(lat, lng, e.lat!, e.lng!) < radius;
+        return _locatorService.calculateDistance(lat, lng, e.lat!, e.lng!) <
+            radius;
       }).toList();
     }
 

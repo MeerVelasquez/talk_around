@@ -1,7 +1,7 @@
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/data/datasources/local/channel_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/channel_datasource.dart';
-import 'package:talk_around/data/utils/network_util.dart';
+import 'package:talk_around/services/network_service.dart';
 
 import 'package:talk_around/domain/models/channel.dart';
 import 'package:talk_around/domain/repositories/channel_repository.dart';
@@ -19,7 +19,7 @@ class ChannelFirebaseRepository implements ChannelRepository {
     try {
       return await _channelDatasource.getChannel(id);
     } catch (err) {
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _channelLocalDatasource.getChannel(id);
       } else {
         rethrow;
@@ -36,7 +36,7 @@ class ChannelFirebaseRepository implements ChannelRepository {
       });
       return channels;
     } catch (err) {
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _channelLocalDatasource.getChannelsFromUser(id);
       } else {
         rethrow;
@@ -58,7 +58,7 @@ class ChannelFirebaseRepository implements ChannelRepository {
       });
       return channels;
     } catch (err) {
-      if (!(await NetworkUtil.hasNetwork())) {
+      if (!(await NetworkService.hasNetwork())) {
         return await _channelLocalDatasource.getChannels(
           lat: lat,
           lng: lng,

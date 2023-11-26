@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:loggy/loggy.dart';
 
-class NetworkUtil {
+class NetworkService {
   static bool lastNetworkCheck = false;
 
   static Future<bool> hasNetwork() async {

@@ -1,7 +1,7 @@
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/data/datasources/local/message_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/message_datasource.dart';
-import 'package:talk_around/data/utils/network_util.dart';
+import 'package:talk_around/services/network_service.dart';
 
 import 'package:talk_around/domain/models/message.dart';
 import 'package:talk_around/domain/repositories/message_repository.dart';
@@ -13,9 +13,9 @@ class MessageFirebaseRepository implements MessageRepository {
 
   @override
   Future<List<Message>> getMessagesFromChannel(String channelId) async {
-    bool lastNetworkCheck = NetworkUtil.lastNetworkCheck;
+    bool lastNetworkCheck = NetworkService.lastNetworkCheck;
 
-    if (await NetworkUtil.hasNetwork()) {
+    if (await NetworkService.hasNetwork()) {
       if (!lastNetworkCheck) {
         await createMissingMessages();
       }
@@ -30,9 +30,9 @@ class MessageFirebaseRepository implements MessageRepository {
 
   @override
   Future<Message> createMessage(Message message) async {
-    bool lastNetworkCheck = NetworkUtil.lastNetworkCheck;
+    bool lastNetworkCheck = NetworkService.lastNetworkCheck;
 
-    if (await NetworkUtil.hasNetwork()) {
+    if (await NetworkService.hasNetwork()) {
       if (!lastNetworkCheck) {
         await createMissingMessages();
       }
@@ -48,9 +48,9 @@ class MessageFirebaseRepository implements MessageRepository {
 
   @override
   Future<void> deleteMessage(String id) async {
-    bool lastNetworkCheck = NetworkUtil.lastNetworkCheck;
+    bool lastNetworkCheck = NetworkService.lastNetworkCheck;
 
-    if (await NetworkUtil.hasNetwork()) {
+    if (await NetworkService.hasNetwork()) {
       if (!lastNetworkCheck) {
         await createMissingMessages();
       }
