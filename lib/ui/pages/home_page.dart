@@ -71,7 +71,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('asdasda');
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBarHomeWidget(onPressedNotification: onPressedNotification),

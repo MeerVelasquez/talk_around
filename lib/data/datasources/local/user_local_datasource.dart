@@ -56,7 +56,7 @@ class UserLocalDatasource {
       String? username,
       // String? password,
       bool? geolocEnabled,
-      int? prefGeolocRadius,
+      double? prefGeolocRadius,
       double? lat,
       double? lng}) async {
     final SharedPreferences prefs = await _getPrefs();

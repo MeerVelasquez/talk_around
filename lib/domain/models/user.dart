@@ -9,7 +9,7 @@ class User {
   String username;
   String? password;
   bool geolocEnabled;
-  int? prefGeolocRadius;
+  double? prefGeolocRadius;
   double? lat;
   double? lng;
   // List<Channel> channels;
@@ -42,7 +42,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     bool geolocEnabled;
-    int? prefGeolocRadius;
+    double? prefGeolocRadius;
     double? lat;
     double? lng;
     List<String>? channels;
@@ -55,7 +55,9 @@ class User {
     }
 
     try {
-      prefGeolocRadius = json['prefGeolocRadius'] ?? 0;
+      prefGeolocRadius = json['prefGeolocRadius'].runtimeType == int
+          ? json['prefGeolocRadius'].toDouble()
+          : json['prefGeolocRadius'];
     } catch (err) {
       logError('User.fromJson: prefGeolocRadius: $err');
     }

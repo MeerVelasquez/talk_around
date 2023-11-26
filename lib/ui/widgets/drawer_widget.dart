@@ -6,9 +6,15 @@ import 'package:talk_around/ui/controllers/app_controller.dart';
 class DrawerWidget extends StatelessWidget {
   DrawerWidget({
     Key? key,
-  }) : super(key: key);
+  }) : super(key: key) {
+    if (_appController.geolocRadius != null) {
+      _geolocRadiusController.text = _appController.geolocRadius.toString();
+    }
+    // _geolocRadiusController.text = '2';
+  }
 
   final AppController _appController = Get.find<AppController>();
+  final TextEditingController _geolocRadiusController = TextEditingController();
 
   void onLogout() async {
     try {
@@ -26,23 +32,96 @@ class DrawerWidget extends StatelessWidget {
     }
   }
 
-  Widget getToggleGeolocWidget() => Obx(() => SizedBox(
-        width: 96,
-        height: 72,
-        child: FittedBox(
-          fit: BoxFit.fill,
-          child: Switch(
-            // This bool value toggles the switch.
-            value: _appController.isGeolocEnabled,
-            activeColor: Colors.green,
-            onChanged: onToggleGeoloc,
-          ),
-        ),
-      ));
-
-  Widget getGeolocPrefs() {
-    return Container();
+  void onGeolocRadiusChanged(String value) {
+    try {
+      _appController.geolocRadius = double.parse(value);
+    } catch (err) {
+      logError(err);
+    }
   }
+
+  Widget getToggleGeolocWidget() => Obx(
+        () => Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Geolocation',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+                SizedBox(
+                  width: 96,
+                  height: 72,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Switch(
+                      // This bool value toggles the switch.
+                      value: _appController.isGeolocEnabled,
+                      activeColor: Colors.green,
+                      onChanged: onToggleGeoloc,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget getGeolocPrefs() => Obx(() {
+        if (!_appController.isGeolocEnabled) return Container();
+        return Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'People within',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 200,
+                      child: TextField(
+                        cursorColor: Colors.white,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 24),
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          // labelText: 'Maximum distance',
+                          prefixIcon: Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.white,
+                          ),
+                          // border: OutlineInputBorder(),
+                          // border: InputBorder.none,
+                          // fillColor: Colors.white,
+                          filled: true,
+                        ),
+                        controller: _geolocRadiusController,
+                        onChanged: onGeolocRadiusChanged,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    const Text(
+                      'km',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ],
+        );
+      });
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -89,22 +168,15 @@ class DrawerWidget extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    Row(
+                    Column(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Geolocation',
-                              style:
-                                  TextStyle(fontSize: 24, color: Colors.white),
-                            ),
-                            getToggleGeolocWidget(),
-                            getGeolocPrefs()
-                          ],
-                        )
+                        getGeolocPrefs(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        getToggleGeolocWidget(),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 InkWell(

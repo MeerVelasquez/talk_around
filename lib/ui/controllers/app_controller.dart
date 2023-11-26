@@ -37,11 +37,12 @@ class AppController extends GetxController {
 
   StreamSubscription<UserLocation?>? _geolocChangesSubscription;
   final Rx<bool> _isGeolocEnabled = Rx<bool>(false);
-  final Rx<int?> _geolocPrefRadius = Rx<int?>(null);
-  final Rx<bool> _geolocPrefsSaved = Rx<bool>(true);
+  final Rx<double?> _geolocPrefRadius = Rx<double?>(null);
+  // final Rx<bool> _geolocPrefsSaved = Rx<bool>(true);
   final Rx<UserLocation?> _userLocation = Rx<UserLocation?>(null);
   bool get isGeolocEnabled => _isGeolocEnabled.value;
-  int? get geolocRadius => _geolocPrefRadius.value;
+  double? get geolocRadius => _geolocPrefRadius.value;
+  void set geolocRadius(double? value) => _geolocPrefRadius.value = value;
   // UserLocation? get userLocation => _userLocation.value;
 
   final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
@@ -215,19 +216,20 @@ class AppController extends GetxController {
     // _currentUser.refresh();
 
     _isGeolocEnabled.value = value;
-    if (_isLoggedIn.value) {
-      _geolocPrefsSaved.value = false;
-    }
+    // if (_isLoggedIn.value) {
+    //   _geolocPrefsSaved.value = false;
+    // }
   }
 
   Future<void> saveGeolocPrefs() async {
     logInfo('Controller Toggle Geoloc');
     if (_isLoggedIn.value) {
-      if (!_geolocPrefsSaved.value) {
-        if (_currentUser.value == null || _currentUser.value!.id == null) {
-          Future.error('User or id is null');
-        }
-
+      // if (!_geolocPrefsSaved.value) {
+      if (_currentUser.value == null || _currentUser.value!.id == null) {
+        Future.error('User or id is null');
+      }
+      if (_currentUser.value!.geolocEnabled != _isGeolocEnabled.value ||
+          _currentUser.value!.prefGeolocRadius != _geolocPrefRadius.value) {
         await _userUseCase.updatePartialCurrentUser(_currentUser.value!.id!,
             geolocEnabled: _isGeolocEnabled.value,
             prefGeolocRadius: _geolocPrefRadius.value);
@@ -236,7 +238,7 @@ class AppController extends GetxController {
         _currentUser.value!.prefGeolocRadius = _geolocPrefRadius.value;
         _currentUser.refresh();
 
-        _geolocPrefsSaved.value = true;
+        // _geolocPrefsSaved.value = true;
 
         logInfo('Geoloc updated');
       }
@@ -272,7 +274,7 @@ class AppController extends GetxController {
       String? username,
       // String? password,
       bool? geolocEnabled,
-      int? prefGeolocRadius,
+      double? prefGeolocRadius,
       double? lat,
       double? lng}) async {
     logInfo("Update user");
