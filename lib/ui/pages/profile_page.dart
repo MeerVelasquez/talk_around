@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
+import 'package:talk_around/ui/controllers/app_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -32,14 +33,18 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     Text(
-                      "Elliott Velásquez",
+                      _appController.currentUser != null
+                          ? _appController.currentUser!.name
+                          : 'User',
                       style: Theme.of(context)
                           .textTheme
                           .headline6
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "@ElliottTheCocker",
+                      _appController.currentUser != null
+                          ? '@${_appController.currentUser!.username}'
+                          : '@username',
                       style: Theme.of(context).textTheme.subtitle2?.copyWith(
                           fontFamily: 'Montserrat',
                           fontSize: 12,
