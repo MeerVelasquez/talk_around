@@ -70,6 +70,7 @@ class _FirstPageState extends State<FirstPage> {
                 ),
                 SizedBox(height: 25),
                 ButtonPrimaryWidget(
+                  key: const Key('getStartedButton'),
                   onPressed: onGetStarted,
                   text: 'Get Started',
                   fontSize: 20,
