@@ -70,17 +70,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  void onJoinChannel(Channel channel) {
+  void onJoinChannel(Channel channel) async {
     try {
-      _appController.joinChannel(channel);
+      await _appController.joinChannel(channel);
     } catch (err) {
       logError(err);
     }
   }
 
-  void onEnterChannel(Channel channel) {
+  void onEnterChannel(Channel channel) async {
     try {
-      _appController.enterChannel(channel);
+      await _appController.enterChannel(channel);
     } catch (err) {
       logError(err);
     }
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         color: Colors.grey.shade100,
                         child: const Center(
                           child: Text(
-                            "You don't follow any channel yet.",
+                            "You already follow all channels!",
                             style: TextStyle(
                                 fontSize: 16, fontStyle: FontStyle.italic),
                           ),

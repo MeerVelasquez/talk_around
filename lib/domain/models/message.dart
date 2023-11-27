@@ -50,7 +50,7 @@ class Message {
       'text': text,
       'senderId': senderId,
       'channelId': channelId,
-      'createdAt': createdAt,
+      'createdAt': createdAt.toString(),
       'deleted': deleted,
     };
   }

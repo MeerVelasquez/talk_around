@@ -32,12 +32,41 @@ class AuthDatasource {
     await _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> signInWithGoogle() async {
-    // validate user existance in Firestore
-    // List<User> users = await _getUsers({'email': email});
-    // if (users.length != 1) {
-    //   return Future.error('${users.length} users with email $email}');
-    // }
+  Future<User?> signInWithGoogle(dynamic authentication) async {
+    firebase_auth.OAuthCredential credential =
+        firebase_auth.GoogleAuthProvider.credential(
+      accessToken: authentication?.accessToken,
+      idToken: authentication?.idToken,
+    );
+
+    firebase_auth.UserCredential userCredential =
+        await _auth.signInWithCredential(credential);
+    if (userCredential.user != null && userCredential.user!.email != null) {
+      final List<User> users =
+          await _getUsers({'email': userCredential.user!.email});
+      if (users.length > 1) {
+        return Future.error(
+            'More than one user with email ${userCredential.user!.email}');
+      }
+
+      final User newUser;
+      if (users.isEmpty) {
+        newUser = User.defaultUser();
+        newUser.email = userCredential.user!.email!;
+        if (userCredential.user!.displayName! != null) {
+          newUser.name = userCredential.user!.displayName!;
+        }
+
+        DocumentReference doc =
+            await _db.collection(_collection).add(newUser.toJson());
+
+        newUser.id = doc.id;
+      } else {
+        newUser = users[0];
+      }
+      return newUser;
+    }
+    return null;
   }
 
   Future<void> signInAsAnonymous() async {}

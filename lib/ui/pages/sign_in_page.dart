@@ -46,6 +46,15 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
     _appController.goToSignUp();
   }
 
+  void onSignInWithGoogle() async {
+    try {
+      await _appController.signInWithGoogle();
+    } catch (err) {
+      logError(err);
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +155,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                           backgroundColor:
                               MaterialStateProperty.all(Color(0xFFE7FCFD)),
                         ),
-                        onPressed: () {},
+                        onPressed: onSignInWithGoogle,
                         icon: Image.asset('assets/img/google.png',
                             width: 30, height: 30),
                         label: Row(

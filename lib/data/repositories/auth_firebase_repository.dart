@@ -37,8 +37,8 @@ class AuthFirebaseRepository implements AuthRepository {
   }
 
   @override
-  Future<void> signInWithGoogle() async {
-    await _authDatasource.signInWithGoogle();
+  Future<User?> signInWithGoogle(dynamic authentication) async {
+    return await _authDatasource.signInWithGoogle(authentication);
   }
 
   @override

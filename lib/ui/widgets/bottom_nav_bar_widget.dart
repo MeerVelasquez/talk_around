@@ -14,19 +14,19 @@ class BottomNavBarWidget extends StatelessWidget {
     BottomNavBarSection(
       // index: 0,
       route: AppRoutes.profile,
-      icon: const Icon(Icons.people),
+      icon: Icons.people,
       title: 'Profile',
     ),
     BottomNavBarSection(
       // index: 1,
       route: AppRoutes.home,
-      icon: const Icon(Icons.home),
+      icon: Icons.home,
       title: 'Home',
     ),
     BottomNavBarSection(
       // index: 2,
       route: AppRoutes.createChannel,
-      icon: const Icon(Icons.add),
+      icon: Icons.add,
       title: 'New channel',
     ),
   ];
@@ -44,11 +44,17 @@ class BottomNavBarWidget extends StatelessWidget {
     return Obx(() => ConvexAppBar(
           items: sections
               .map((section) => TabItem(
-                    icon: section.icon,
+                    icon: Icon(section.icon,
+                        color: section.route ==
+                                sections[_appController.currentSection ?? 0]
+                                    .route
+                            ? Colors.black
+                            : Colors.white),
                     title: section.title,
                   ))
               .toList(),
           activeColor: Colors.white,
+          color: Colors.white,
           initialActiveIndex: _appController.currentSection,
           backgroundColor: Color(0xFF013E6A),
           onTap: onTap,
@@ -66,6 +72,6 @@ class BottomNavBarSection {
 
   // final int index;
   final String route;
-  final Icon icon;
+  final IconData icon;
   final String title;
 }

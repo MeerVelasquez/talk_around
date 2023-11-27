@@ -152,7 +152,6 @@ class ChannelLocalDatasource {
   // }
 
   Future<void> addChannelsIfNotExist(List<Channel> channels) async {
-    print('Add channels if not exist');
     final SharedPreferences prefs = await _getPrefs();
 
     final String? channelsString = prefs.getString(_channelsKey);
