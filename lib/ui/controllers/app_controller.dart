@@ -48,7 +48,9 @@ class AppController extends GetxController {
   // UserLocation? get userLocation => _userLocation.value;
 
   final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
+  final Rx<int?> _currentChannelIndex = Rx<int?>(null);
   List<Channel>? get channels => _channels.value;
+  int? get currentChannelIndex => _currentChannelIndex.value;
 
   final Rx<List<Topic>?> _topics = Rx<List<Topic>?>(null);
   List<Topic>? get topics => _topics.value;
@@ -413,5 +415,32 @@ class AppController extends GetxController {
     return _channels.value!
         .where((channel) => !_currentUser.value!.channels!.contains(channel.id))
         .toList();
+  }
+
+  Future<void> enterChannel(Channel channel) async {
+    Get.toNamed(AppRoutes.channel);
+  }
+
+  Future<void> joinChannel(Channel channel) async {
+    if (channel.id == null) {
+      return Future.error('Channel id is null');
+    }
+
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
+      return Future.error('User or id is null');
+    }
+
+    if (_currentUser.value!.channels != null &&
+        _currentUser.value!.channels!.contains(channel.id)) {
+      return;
+    }
+    await _channelUseCase.joinChannel(channel.id!, _currentUser.value!.id!);
+
+    _currentUser.value!.channels!.add(channel.id!);
+    _currentUser.refresh();
+
+    channel.users!.add(_currentUser.value!.id!);
+
+    await enterChannel(channel);
   }
 }

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:talk_around/ui/pages/home_page.dart';
 import 'package:get/get.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class ChannelPage extends StatefulWidget {
+  const ChannelPage({Key? key}) : super(key: key);
 
   @override
-  _ChatPageState createState() => _ChatPageState();
+  _ChannelPageState createState() => _ChannelPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChannelPageState extends State<ChannelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,11 +70,11 @@ class _ChatPageState extends State<ChatPage> {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              "assets/img/Chat.png", // Replace with your background image
+              "assets/img/Channel.png", // Replace with your background image
               fit: BoxFit.cover,
             ),
           ),
-          // Chat Interface
+          // Channel Interface
           Positioned.fill(
             child: Align(
               alignment: Alignment.bottomLeft,

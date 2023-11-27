@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:talk_around/ui/middlewares/auth_middleware.dart';
 
-import 'package:talk_around/ui/pages/chat_page.dart';
+import 'package:talk_around/ui/pages/channel_page.dart';
 import 'package:talk_around/ui/pages/create_channel_page.dart';
 import 'package:talk_around/ui/pages/first_page.dart';
 import 'package:talk_around/ui/pages/home_page.dart';
@@ -14,7 +14,6 @@ import 'package:talk_around/ui/pages/sign_up_page.dart';
 // import 'package:talk_around/ui/middlewares/auth_middleware.dart';
 
 abstract class AppRoutes {
-  static const String chat = '/chat';
   static const String first = '/first';
   static const String home = '/';
   static const String interests = '/interests';
@@ -22,13 +21,14 @@ abstract class AppRoutes {
   static const String profile = '/profile';
   static const String signUp = '/sign-up';
   static const String createChannel = '/create-channel';
+  static const String channel = '/channel';
 }
 
 List<GetPage<dynamic>> appRoutes() => [
       GetPage(
-        name: AppRoutes.chat,
-        page: () => const ChatPage(
-          key: Key('ChatPage'),
+        name: AppRoutes.channel,
+        page: () => const ChannelPage(
+          key: Key('ChannelPage'),
         ),
         // transition: Transition.leftToRightWithFade,
         // transitionDuration: Duration(milliseconds: 500),
@@ -89,6 +89,15 @@ List<GetPage<dynamic>> appRoutes() => [
         name: AppRoutes.createChannel,
         page: () => const CreateChannelPage(
           key: Key('CreateChannelPage'),
+        ),
+        // transition: Transition.leftToRightWithFade,
+        // transitionDuration: Duration(milliseconds: 500),
+        // middlewares: [AuthMiddleware()]
+      ),
+      GetPage(
+        name: AppRoutes.channel,
+        page: () => const ChannelPage(
+          key: Key('ChannelPage'),
         ),
         // transition: Transition.leftToRightWithFade,
         // transitionDuration: Duration(milliseconds: 500),

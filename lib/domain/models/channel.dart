@@ -37,7 +37,6 @@ class Channel {
     double? lat;
     double? lng;
     List<String>? users;
-    print(json);
 
     try {
       createdAt =

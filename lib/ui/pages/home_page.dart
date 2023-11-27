@@ -69,6 +69,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
+  void onJoinChannel(Channel channel) {
+    try {
+      _appController.joinChannel(channel);
+    } catch (err) {
+      logError(err);
+    }
+  }
+
+  void onEnterChannel(Channel channel) {
+    try {
+      _appController.enterChannel(channel);
+    } catch (err) {
+      logError(err);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Channel> channelsFollowing = _appController.getFollowingChannels();
@@ -122,10 +138,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       child: Container(
                         height: 300,
                         child: GridChannelsWidget(
-                            channels: channelsFollowing,
-                            onTap: (Channel channel) {
-                              print(channel.toJson());
-                            }),
+                            channels: channelsFollowing, onTap: onEnterChannel),
                       ),
                     );
                   }),
@@ -164,10 +177,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       child: Container(
                         height: 300,
                         child: GridChannelsWidget(
-                            channels: channelsExplore,
-                            onTap: (Channel channel) {
-                              print(channel.toJson());
-                            }),
+                            channels: channelsExplore, onTap: onJoinChannel),
                       ),
                     );
                   }),
