@@ -36,6 +36,7 @@ class AppBarHomeWidget extends StatelessWidget implements PreferredSizeWidget {
                 Icons.person_rounded,
                 // Icons.notifications,
                 color: Color(0xFF013E6A),
+                size: 30,
               ),
             ),
           ],

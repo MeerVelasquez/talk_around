@@ -49,7 +49,7 @@ class BrandHeaderWidget extends StatelessWidget {
                             text: TextSpan(
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 18,
                               ),
                               children: <TextSpan>[

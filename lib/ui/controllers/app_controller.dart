@@ -14,7 +14,9 @@ import 'package:talk_around/domain/use_cases/geoloc_use_case.dart';
 import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
+import 'package:talk_around/ui/pages/home_page.dart';
 import 'package:talk_around/ui/routes.dart';
+import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
 
 class AppController extends GetxController {
   final AuthUseCase _authUseCase = Get.find<AuthUseCase>();
@@ -37,11 +39,12 @@ class AppController extends GetxController {
 
   StreamSubscription<UserLocation?>? _geolocChangesSubscription;
   final Rx<bool> _isGeolocEnabled = Rx<bool>(false);
-  final Rx<int?> _geolocPrefRadius = Rx<int?>(null);
-  final Rx<bool> _geolocPrefsSaved = Rx<bool>(true);
+  final Rx<double?> _geolocPrefRadius = Rx<double?>(null);
+  // final Rx<bool> _geolocPrefsSaved = Rx<bool>(true);
   final Rx<UserLocation?> _userLocation = Rx<UserLocation?>(null);
   bool get isGeolocEnabled => _isGeolocEnabled.value;
-  int? get geolocRadius => _geolocPrefRadius.value;
+  double? get geolocRadius => _geolocPrefRadius.value;
+  void set geolocRadius(double? value) => _geolocPrefRadius.value = value;
   // UserLocation? get userLocation => _userLocation.value;
 
   final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
@@ -54,15 +57,25 @@ class AppController extends GetxController {
   bool get isDrawerOpen => _isDrawerOpen.value;
   set isDrawerOpen(bool value) => _isDrawerOpen.value = value;
 
+  // final Rx<BottomNavBarSection?> _currentSection =
+  //     Rx<BottomNavBarSection?>(null);
+  // BottomNavBarSection? get currentSection => _currentSection.value;
+  // set currentSection(BottomNavBarSection? value) =>
+  //     _currentSection.value = value;
+
+  final Rx<int?> _currentSection = Rx<int?>(null);
+  int? get currentSection => _currentSection.value;
+  set currentSection(int? value) => _currentSection.value = value;
+
   @override
   void onInit() {
     super.onInit();
 
     getCurrentUser().catchError(logError);
-    listenAuthChanges();
+    _listenAuthChanges();
   }
 
-  void listenAuthChanges() {
+  void _listenAuthChanges() {
     _authChangesSubscription =
         _authUseCase.authChanges.listen((AuthChangeData? authChangeData) async {
       if (authChangeData == null) {
@@ -130,7 +143,8 @@ class AppController extends GetxController {
         prefGeolocRadius: 100,
         lat: 0,
         lng: 0,
-        channels: []);
+        channels: [],
+        interests: []);
 
     final User newUser = await _authUseCase.signUp(user);
     logInfo('Sign up success');
@@ -204,6 +218,7 @@ class AppController extends GetxController {
     await _userUseCase.deleteLocalUser();
     _currentUser.value = null;
     _isGeolocEnabled.value = false;
+    _geolocPrefRadius.value = null;
   }
 
   void toggleGeoloc(bool value) {
@@ -215,19 +230,20 @@ class AppController extends GetxController {
     // _currentUser.refresh();
 
     _isGeolocEnabled.value = value;
-    if (_isLoggedIn.value) {
-      _geolocPrefsSaved.value = false;
-    }
+    // if (_isLoggedIn.value) {
+    //   _geolocPrefsSaved.value = false;
+    // }
   }
 
   Future<void> saveGeolocPrefs() async {
     logInfo('Controller Toggle Geoloc');
     if (_isLoggedIn.value) {
-      if (!_geolocPrefsSaved.value) {
-        if (_currentUser.value == null || _currentUser.value!.id == null) {
-          Future.error('User or id is null');
-        }
-
+      // if (!_geolocPrefsSaved.value) {
+      if (_currentUser.value == null || _currentUser.value!.id == null) {
+        Future.error('User or id is null');
+      }
+      if (_currentUser.value!.geolocEnabled != _isGeolocEnabled.value ||
+          _currentUser.value!.prefGeolocRadius != _geolocPrefRadius.value) {
         await _userUseCase.updatePartialCurrentUser(_currentUser.value!.id!,
             geolocEnabled: _isGeolocEnabled.value,
             prefGeolocRadius: _geolocPrefRadius.value);
@@ -236,7 +252,7 @@ class AppController extends GetxController {
         _currentUser.value!.prefGeolocRadius = _geolocPrefRadius.value;
         _currentUser.refresh();
 
-        _geolocPrefsSaved.value = true;
+        // _geolocPrefsSaved.value = true;
 
         logInfo('Geoloc updated');
       }
@@ -255,6 +271,9 @@ class AppController extends GetxController {
     _currentUser.value = await _userUseCase.getCurrentUser();
     _isGeolocEnabled.value =
         _currentUser.value != null ? _currentUser.value!.geolocEnabled : false;
+    _geolocPrefRadius.value = _currentUser.value != null
+        ? _currentUser.value!.prefGeolocRadius
+        : null;
   }
 
   Future<void> getUser(String id) async {
@@ -272,7 +291,7 @@ class AppController extends GetxController {
       String? username,
       // String? password,
       bool? geolocEnabled,
-      int? prefGeolocRadius,
+      double? prefGeolocRadius,
       double? lat,
       double? lng}) async {
     logInfo("Update user");
@@ -296,13 +315,19 @@ class AppController extends GetxController {
 
   Future<void> fetchChannels() async {
     logInfo('Controller Fetch Channels');
-    // if (_isGeolocEnabled.value) {
-
+    if (_isGeolocEnabled.value) {
+      if (_userLocation.value == null) {
+        throw Exception('User location is null');
+      } else {
+        _channels.value = await _channelUseCase.getChannels(
+            lat: _userLocation.value!.lat,
+            lng: _userLocation.value!.lng,
+            radius: _geolocPrefRadius.value);
+      }
+    } else {
+      _channels.value = await _channelUseCase.getChannels();
+    }
     // _channels.value = await _channelUseCase.getChannels();
-    // } else {
-    //   _channels.value = await _channelUseCase.getChannels(lat: _currentUser.value!.lat);
-    // }
-    _channels.value = await _channelUseCase.getChannels();
   }
 
   Future<void> fetchTopics() async {
@@ -348,5 +373,45 @@ class AppController extends GetxController {
     _geolocPrefRadius.value = null;
 
     logInfo('Geoloc stopped');
+  }
+
+  void selectBottomNavBarItem(int index) {
+    if (_currentSection.value == null) {
+      throw Exception('currentSection is null');
+    }
+
+    if (_currentSection.value == index) {
+      return;
+    }
+    logInfo(
+        'Current route: ${BottomNavBarWidget.sections[_currentSection.value!].route}. Going to route ${BottomNavBarWidget.sections[index].route}');
+    final String route = BottomNavBarWidget.sections[index].route;
+    Get.offNamed(route, parameters: {
+      if (route == AppRoutes.home) HomePage.paramAvoidFetchData: 'true'
+    });
+    _currentSection.value = index;
+  }
+
+  void checkBottomNavbarSection() {
+    if (_currentSection.value == null) {
+      final int index = BottomNavBarWidget.sections.indexOf(BottomNavBarWidget
+          .sections
+          .firstWhere((element) => element.route == Get.currentRoute));
+      if (index != -1) {
+        _currentSection.value = index;
+      }
+    }
+  }
+
+  List<Channel> getFollowingChannels() {
+    return _channels.value!
+        .where((channel) => _currentUser.value!.channels!.contains(channel.id))
+        .toList();
+  }
+
+  List<Channel> getExploreChannels() {
+    return _channels.value!
+        .where((channel) => !_currentUser.value!.channels!.contains(channel.id))
+        .toList();
   }
 }

@@ -89,7 +89,7 @@ class UserFirebaseRepository implements UserRepository {
       String? username,
       // String? password,
       bool? geolocEnabled,
-      int? prefGeolocRadius,
+      double? prefGeolocRadius,
       double? lat,
       double? lng}) async {
     try {

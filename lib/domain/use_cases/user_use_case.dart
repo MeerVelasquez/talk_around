@@ -48,7 +48,7 @@ class UserUseCase {
       String? username,
       // String? password,
       bool? geolocEnabled,
-      int? prefGeolocRadius,
+      double? prefGeolocRadius,
       double? lat,
       double? lng}) async {
     return await _userRepository.updatePartialCurrentUser(id,

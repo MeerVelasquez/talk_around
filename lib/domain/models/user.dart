@@ -9,11 +9,12 @@ class User {
   String username;
   String? password;
   bool geolocEnabled;
-  int? prefGeolocRadius;
+  double? prefGeolocRadius;
   double? lat;
   double? lng;
   // List<Channel> channels;
   List<String>? channels;
+  List<String>? interests;
 
   User({
     this.id,
@@ -26,6 +27,7 @@ class User {
     required this.lat,
     required this.lng,
     required this.channels,
+    required this.interests,
   });
 
   User.defaultUser()
@@ -38,14 +40,16 @@ class User {
         prefGeolocRadius = 0,
         lat = 0,
         lng = 0,
-        channels = [];
+        channels = [],
+        interests = [];
 
   factory User.fromJson(Map<String, dynamic> json) {
     bool geolocEnabled;
-    int? prefGeolocRadius;
+    double? prefGeolocRadius;
     double? lat;
     double? lng;
     List<String>? channels;
+    List<String>? interests;
 
     try {
       geolocEnabled = json['geolocEnabled'];
@@ -55,7 +59,9 @@ class User {
     }
 
     try {
-      prefGeolocRadius = json['prefGeolocRadius'] ?? 0;
+      prefGeolocRadius = json['prefGeolocRadius'].runtimeType == int
+          ? json['prefGeolocRadius'].toDouble()
+          : json['prefGeolocRadius'];
     } catch (err) {
       logError('User.fromJson: prefGeolocRadius: $err');
     }
@@ -82,6 +88,14 @@ class User {
       logError(err);
     }
 
+    try {
+      interests = json['interests'] != null
+          ? List<String>.from(json['interests'] as List)
+          : null;
+    } catch (err) {
+      logError(err);
+    }
+
     return User(
         id: json["id"],
         name: json["name"] ?? "",
@@ -92,7 +106,8 @@ class User {
         prefGeolocRadius: prefGeolocRadius,
         lat: lat,
         lng: lng,
-        channels: channels);
+        channels: channels,
+        interests: interests);
   }
 
   factory User.from(User user) => User(
@@ -106,6 +121,7 @@ class User {
         lat: user.lat,
         lng: user.lng,
         channels: user.channels,
+        interests: user.interests,
       );
 
   Map<String, dynamic> toJson() => {
@@ -120,5 +136,6 @@ class User {
         "lng": lng,
         // "channels": channels.map((c) => c.id).toList(),
         "channels": channels,
+        "interests": interests,
       };
 }
