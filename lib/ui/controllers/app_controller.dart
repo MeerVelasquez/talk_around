@@ -67,6 +67,7 @@ class AppController extends GetxController {
 
   final Rx<List<Message>?> _messages = Rx<List<Message>?>(null);
   List<Message>? get messages => _messages.value;
+  Rx<List<Message>?> get messagesPublic => _messages;
 
   final Rx<int?> _currentSection = Rx<int?>(null);
   int? get currentSection => _currentSection.value;
