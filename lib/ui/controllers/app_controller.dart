@@ -14,6 +14,7 @@ import 'package:talk_around/domain/use_cases/geoloc_use_case.dart';
 import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
+import 'package:talk_around/ui/pages/home_page.dart';
 import 'package:talk_around/ui/routes.dart';
 import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
 
@@ -314,13 +315,19 @@ class AppController extends GetxController {
 
   Future<void> fetchChannels() async {
     logInfo('Controller Fetch Channels');
-    // if (_isGeolocEnabled.value) {
-
+    if (_isGeolocEnabled.value) {
+      if (_userLocation.value == null) {
+        throw Exception('User location is null');
+      } else {
+        _channels.value = await _channelUseCase.getChannels(
+            lat: _userLocation.value!.lat,
+            lng: _userLocation.value!.lng,
+            radius: _geolocPrefRadius.value);
+      }
+    } else {
+      _channels.value = await _channelUseCase.getChannels();
+    }
     // _channels.value = await _channelUseCase.getChannels();
-    // } else {
-    //   _channels.value = await _channelUseCase.getChannels(lat: _currentUser.value!.lat);
-    // }
-    _channels.value = await _channelUseCase.getChannels();
   }
 
   Future<void> fetchTopics() async {
@@ -378,7 +385,10 @@ class AppController extends GetxController {
     }
     logInfo(
         'Current route: ${BottomNavBarWidget.sections[_currentSection.value!].route}. Going to route ${BottomNavBarWidget.sections[index].route}');
-    Get.offNamed(BottomNavBarWidget.sections[index].route);
+    final String route = BottomNavBarWidget.sections[index].route;
+    Get.offNamed(route, parameters: {
+      if (route == AppRoutes.home) HomePage.paramAvoidFetchData: 'true'
+    });
     _currentSection.value = index;
   }
 
@@ -391,5 +401,17 @@ class AppController extends GetxController {
         _currentSection.value = index;
       }
     }
+  }
+
+  List<Channel> getFollowingChannels() {
+    return _channels.value!
+        .where((channel) => _currentUser.value!.channels!.contains(channel.id))
+        .toList();
+  }
+
+  List<Channel> getExploreChannels() {
+    return _channels.value!
+        .where((channel) => !_currentUser.value!.channels!.contains(channel.id))
+        .toList();
   }
 }

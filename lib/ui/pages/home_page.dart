@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> _fetchData() async {
     final List<Future<void>> futures = [];
 
-    if ((Get.parameters[HomePage.paramAvoidFetchData] ?? "false") != "false") {
+    if ((Get.parameters[HomePage.paramAvoidFetchData] ?? "false") == "false") {
       futures.add(_appController.fetchTopics());
       futures.add(_appController.fetchChannels());
     } else {
@@ -71,6 +71,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    List<Channel> channelsFollowing = _appController.getFollowingChannels();
+    List<Channel> channelsExplore = _appController.getExploreChannels();
+
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBarHomeWidget(onPressedNotification: onPressedNotification),
@@ -80,130 +83,99 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           color: Colors.white,
           child: SafeArea(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const BrandHeaderWidget(),
-                  const SizedBox(height: 20),
-                  Container(
-                    height: 200,
-                    child: GridChannelsWidget(channels: [
-                      Channel(
-                          topicId: '1',
-                          creatorId: '1',
-                          name: 'name',
-                          description: 'description',
-                          imageUrl: 'imageUrl',
-                          language: 'language',
-                          country: 'country',
-                          createdAt: DateTime.now(),
-                          updatedAt: DateTime.now(),
-                          lat: 1,
-                          lng: 1,
-                          users: [])
-                    ], onTap: (Channel channel) {}),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Text('Channels you follow',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w400)),
+                    ],
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     buildClickableBox(
-                  //         'Sports: Messi', 'is love', 'assets/img/sports.jpg'),
-                  //     buildClickableBox(
-                  //         'Games', 'of the season', 'assets/img/games.jpg'),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 20),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     buildClickableBox(
-                  //         'AOT: ', 'Grand Finale', 'assets/img/aot.png'),
-                  //     buildClickableBox('Tips: ', 'Treats for dogs',
-                  //         'assets/img/perfil.jpeg'),
-                  //   ],
-                  // ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Obx(() {
+                    if (_appController.channels == null) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (channelsFollowing.isEmpty) {
+                      return Container(
+                        height: 100,
+                        color: Colors.grey.shade100,
+                        child: const Center(
+                          child: Text(
+                            "You don't follow any channel yet.",
+                            style: TextStyle(
+                                fontSize: 16, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Expanded(
+                      child: Container(
+                        height: 300,
+                        child: GridChannelsWidget(
+                            channels: channelsFollowing,
+                            onTap: (Channel channel) {
+                              print(channel.toJson());
+                            }),
+                      ),
+                    );
+                  }),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Row(
+                    children: [
+                      Text('Explore',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w400)),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Obx(() {
+                    if (_appController.channels == null) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (channelsExplore.isEmpty) {
+                      return Container(
+                        height: 100,
+                        color: Colors.grey.shade100,
+                        child: const Center(
+                          child: Text(
+                            "You don't follow any channel yet.",
+                            style: TextStyle(
+                                fontSize: 16, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      );
+                    }
+                    return Expanded(
+                      child: Container(
+                        height: 300,
+                        child: GridChannelsWidget(
+                            channels: channelsExplore,
+                            onTap: (Channel channel) {
+                              print(channel.toJson());
+                            }),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
           ),
         ),
         bottomNavigationBar: BottomNavBarWidget());
-  }
-
-  Widget buildClickableBox(String title, String description, String imagePath) {
-    return InkWell(
-      onTap: () {
-        // Acción al hacer clic en el cuadro
-        print('Clic en $title');
-      },
-      child: Container(
-        width: 200,
-        height: 250,
-        decoration: BoxDecoration(
-          color: Color(0xFF799AB1),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Stack(
-          children: [
-            // Fondo de la caja
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            // Container con la imagen en el centro
-            Positioned(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: 70,
-              child: Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Color(0xFF234E6C)),
-                ),
-                child: Image.asset(
-                  imagePath,
-                  width: 20, // Ajusta el tamaño según tus necesidades
-                  // height: 50,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Container con el texto en la parte inferior
-            Positioned(
-              left: 20,
-              right: 20,
-              bottom: 10,
-              height: 50,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFE7FCFD),
-                  border: Border.all(
-                    color: Color(0xFF7FA6B9),
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Center(
-                  child: Text(
-                    '$title\n$description',
-                    style: TextStyle(
-                        color: Color(0xFF013E6A),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
