@@ -15,6 +15,7 @@ import 'package:talk_around/domain/use_cases/message_use_case.dart';
 import 'package:talk_around/domain/use_cases/topic_use_case.dart';
 import 'package:talk_around/domain/use_cases/user_use_case.dart';
 import 'package:talk_around/ui/routes.dart';
+import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
 
 class AppController extends GetxController {
   final AuthUseCase _authUseCase = Get.find<AuthUseCase>();
@@ -55,15 +56,25 @@ class AppController extends GetxController {
   bool get isDrawerOpen => _isDrawerOpen.value;
   set isDrawerOpen(bool value) => _isDrawerOpen.value = value;
 
+  // final Rx<BottomNavBarSection?> _currentSection =
+  //     Rx<BottomNavBarSection?>(null);
+  // BottomNavBarSection? get currentSection => _currentSection.value;
+  // set currentSection(BottomNavBarSection? value) =>
+  //     _currentSection.value = value;
+
+  final Rx<int?> _currentSection = Rx<int?>(null);
+  int? get currentSection => _currentSection.value;
+  set currentSection(int? value) => _currentSection.value = value;
+
   @override
   void onInit() {
     super.onInit();
 
     getCurrentUser().catchError(logError);
-    listenAuthChanges();
+    _listenAuthChanges();
   }
 
-  void listenAuthChanges() {
+  void _listenAuthChanges() {
     _authChangesSubscription =
         _authUseCase.authChanges.listen((AuthChangeData? authChangeData) async {
       if (authChangeData == null) {
@@ -131,7 +142,8 @@ class AppController extends GetxController {
         prefGeolocRadius: 100,
         lat: 0,
         lng: 0,
-        channels: []);
+        channels: [],
+        interests: []);
 
     final User newUser = await _authUseCase.signUp(user);
     logInfo('Sign up success');
@@ -205,6 +217,7 @@ class AppController extends GetxController {
     await _userUseCase.deleteLocalUser();
     _currentUser.value = null;
     _isGeolocEnabled.value = false;
+    _geolocPrefRadius.value = null;
   }
 
   void toggleGeoloc(bool value) {
@@ -257,6 +270,9 @@ class AppController extends GetxController {
     _currentUser.value = await _userUseCase.getCurrentUser();
     _isGeolocEnabled.value =
         _currentUser.value != null ? _currentUser.value!.geolocEnabled : false;
+    _geolocPrefRadius.value = _currentUser.value != null
+        ? _currentUser.value!.prefGeolocRadius
+        : null;
   }
 
   Future<void> getUser(String id) async {
@@ -350,5 +366,30 @@ class AppController extends GetxController {
     _geolocPrefRadius.value = null;
 
     logInfo('Geoloc stopped');
+  }
+
+  void selectBottomNavBarItem(int index) {
+    if (_currentSection.value == null) {
+      throw Exception('currentSection is null');
+    }
+
+    if (_currentSection.value == index) {
+      return;
+    }
+    logInfo(
+        'Current route: ${BottomNavBarWidget.sections[_currentSection.value!].route}. Going to route ${BottomNavBarWidget.sections[index].route}');
+    Get.offNamed(BottomNavBarWidget.sections[index].route);
+    _currentSection.value = index;
+  }
+
+  void checkBottomNavbarSection() {
+    if (_currentSection.value == null) {
+      final int index = BottomNavBarWidget.sections.indexOf(BottomNavBarWidget
+          .sections
+          .firstWhere((element) => element.route == Get.currentRoute));
+      if (index != -1) {
+        _currentSection.value = index;
+      }
+    }
   }
 }

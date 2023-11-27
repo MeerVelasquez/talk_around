@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class CreateChannelPage extends StatefulWidget {
+  const CreateChannelPage({Key? key}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _CreateChannelPageState createState() => _CreateChannelPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
+class _CreateChannelPageState extends State<CreateChannelPage>
+    with WidgetsBindingObserver {
   final AppController _appController = Get.find<AppController>();
   @override
   void initState() {
@@ -21,71 +22,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-          children: [
-            const Expanded(flex: 2, child: _TopPortion()),
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Elliott Velásquez",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "@ElliottTheCocker",
-                      style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                          fontFamily: 'Montserrat',
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FloatingActionButton.extended(
-                          onPressed: () {},
-                          heroTag: 'mesage',
-                          elevation: 0,
-                          backgroundColor: Color(0xFF013E6A),
-                          label: const Text("Message"),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    const _ProfileInfoRow(),
-                    const SizedBox(height: 30),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        boxPreferences('Sports'),
-                        const SizedBox(width: 20),
-                        boxPreferences('News'),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        boxPreferences('Animals'),
-                        const SizedBox(width: 20),
-                        boxPreferences('VideoGames'),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavBarWidget());
+    return Scaffold(bottomNavigationBar: BottomNavBarWidget());
   }
 
   Widget boxPreferences(String title) {
@@ -119,13 +56,13 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   }
 }
 
-class _ProfileInfoRow extends StatelessWidget {
-  const _ProfileInfoRow({Key? key}) : super(key: key);
+class _CreateChannelInfoRow extends StatelessWidget {
+  const _CreateChannelInfoRow({Key? key}) : super(key: key);
 
-  final List<ProfileInfoItem> _items = const [
-    ProfileInfoItem("Chats", 2),
-    ProfileInfoItem("Followers", 120),
-    ProfileInfoItem("Following", 5),
+  final List<CreateChannelInfoItem> _items = const [
+    CreateChannelInfoItem("Chats", 2),
+    CreateChannelInfoItem("Followers", 120),
+    CreateChannelInfoItem("Following", 5),
   ];
 
   @override
@@ -148,7 +85,8 @@ class _ProfileInfoRow extends StatelessWidget {
     );
   }
 
-  Widget _singleItem(BuildContext context, ProfileInfoItem item) => Column(
+  Widget _singleItem(BuildContext context, CreateChannelInfoItem item) =>
+      Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
@@ -169,10 +107,10 @@ class _ProfileInfoRow extends StatelessWidget {
       );
 }
 
-class ProfileInfoItem {
+class CreateChannelInfoItem {
   final String title;
   final int value;
-  const ProfileInfoItem(this.title, this.value);
+  const CreateChannelInfoItem(this.title, this.value);
 }
 
 class _TopPortion extends StatelessWidget {
@@ -187,7 +125,7 @@ class _TopPortion extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 50),
           decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/img/bgProfile.jpg'),
+                  image: AssetImage('assets/img/bgCreateProfile.jpg'),
                   fit: BoxFit.cover),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(50),

@@ -1,12 +1,10 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/domain/models/channel.dart';
 import 'package:talk_around/ui/controllers/app_controller.dart';
 import 'package:talk_around/ui/widgets/app_bar_home_widget.dart';
+import 'package:talk_around/ui/widgets/bottom_nav_bar_widget.dart';
 import 'package:talk_around/ui/widgets/brand_header_widget.dart';
 import 'package:talk_around/ui/widgets/drawer_widget.dart';
 import 'package:talk_around/ui/widgets/grid_channels_widget.dart';
@@ -14,19 +12,21 @@ import 'package:talk_around/ui/widgets/grid_channels_widget.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  static const String paramAvoidFetchData = 'avoid_fetch_data';
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  static const String paramAvoidFetchData = 'avoid_reload_channels';
-
   final AppController _appController = Get.find<AppController>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+
+    _appController.checkBottomNavbarSection();
 
     _fetchData().catchError(logError);
     _appController.checkGeoloc().catchError(logError);
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> _fetchData() async {
     final List<Future<void>> futures = [];
 
-    if ((Get.parameters[paramAvoidFetchData] ?? "false") != "false") {
+    if ((Get.parameters[HomePage.paramAvoidFetchData] ?? "false") != "false") {
       futures.add(_appController.fetchTopics());
       futures.add(_appController.fetchChannels());
     } else {
@@ -128,16 +128,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
           ),
         ),
-        bottomNavigationBar: ConvexAppBar(
-          items: [
-            TabItem(icon: Icons.people, title: 'Profile'),
-            TabItem(icon: Icons.home, title: 'Home'),
-            TabItem(icon: Icons.add, title: 'New chat'),
-          ],
-          initialActiveIndex: 2, //optional, default as 0
-          onTap: (int i) => print('click index=$i'),
-          backgroundColor: Color(0xFF013E6A),
-        ));
+        bottomNavigationBar: BottomNavBarWidget());
   }
 
   Widget buildClickableBox(String title, String description, String imagePath) {
