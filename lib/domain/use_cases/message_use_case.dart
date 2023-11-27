@@ -5,6 +5,10 @@ import 'package:talk_around/domain/repositories/message_repository.dart';
 // import 'package:talk_around/data/repositories/message_firebase_repository.dart';
 
 class MessageUseCase {
+  Stream<List<Message>?> getMessageChanges(String channelId, String userId) {
+    return _messageRepository.getMessageChanges(channelId, userId);
+  }
+
   final MessageRepository _messageRepository = Get.find<MessageRepository>();
 
   Future<List<Message>> getMessagesFromChannel(String channelId) async {

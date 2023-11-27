@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import 'package:talk_around/domain/models/channel.dart';
+import 'package:talk_around/domain/models/message.dart';
 import 'package:talk_around/domain/models/topic.dart';
 import 'package:talk_around/domain/models/user.dart';
 import 'package:talk_around/domain/models/user_location.dart';
@@ -47,12 +48,12 @@ class AppController extends GetxController {
   bool get isGeolocEnabled => _isGeolocEnabled.value;
   double? get geolocRadius => _geolocPrefRadius.value;
   set geolocRadius(double? value) => _geolocPrefRadius.value = value;
-  // UserLocation? get userLocation => _userLocation.value;
+  UserLocation? get userLocation => _userLocation.value;
 
   final Rx<List<Channel>?> _channels = Rx<List<Channel>?>(null);
-  final Rx<int?> _currentChannelIndex = Rx<int?>(null);
+  final Rx<Channel?> _currentChannel = Rx<Channel?>(null);
   List<Channel>? get channels => _channels.value;
-  int? get currentChannelIndex => _currentChannelIndex.value;
+  Channel? get currentChannel => _currentChannel.value;
 
   final Rx<List<Topic>?> _topics = Rx<List<Topic>?>(null);
   List<Topic>? get topics => _topics.value;
@@ -61,11 +62,8 @@ class AppController extends GetxController {
   bool get isDrawerOpen => _isDrawerOpen.value;
   set isDrawerOpen(bool value) => _isDrawerOpen.value = value;
 
-  // final Rx<BottomNavBarSection?> _currentSection =
-  //     Rx<BottomNavBarSection?>(null);
-  // BottomNavBarSection? get currentSection => _currentSection.value;
-  // set currentSection(BottomNavBarSection? value) =>
-  //     _currentSection.value = value;
+  final Rx<List<Message>?> _messages = Rx<List<Message>?>(null);
+  List<Message>? get messages => _messages.value;
 
   final Rx<int?> _currentSection = Rx<int?>(null);
   int? get currentSection => _currentSection.value;
@@ -347,15 +345,11 @@ class AppController extends GetxController {
 
   Future<void> fetchChannels() async {
     logInfo('Controller Fetch Channels');
-    if (_isGeolocEnabled.value) {
-      if (_userLocation.value == null) {
-        throw Exception('User location is null');
-      } else {
-        _channels.value = await _channelUseCase.getChannels(
-            lat: _userLocation.value!.lat,
-            lng: _userLocation.value!.lng,
-            radius: _geolocPrefRadius.value);
-      }
+    if (_isGeolocEnabled.value && _userLocation.value != null) {
+      _channels.value = await _channelUseCase.getChannels(
+          lat: _userLocation.value!.lat,
+          lng: _userLocation.value!.lng,
+          radius: _geolocPrefRadius.value);
     } else {
       _channels.value = await _channelUseCase.getChannels();
     }
@@ -450,7 +444,14 @@ class AppController extends GetxController {
   }
 
   Future<void> enterChannel(Channel channel) async {
+    _currentChannel.value = channel;
     Get.toNamed(AppRoutes.channel);
+  }
+
+  Future<void> getOutChannel() async {
+    _currentChannel.value = null;
+    Get.back();
+    // Get.offNamed(AppRoutes.home);
   }
 
   Future<void> joinChannel(Channel channel) async {
@@ -475,5 +476,69 @@ class AppController extends GetxController {
     channel.users!.add(_currentUser.value!.id!);
 
     await enterChannel(channel);
+  }
+
+  Future<void> leaveChannel(Channel channel) async {
+    if (channel.id == null) {
+      return Future.error('Channel id is null');
+    }
+
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
+      return Future.error('User or id is null');
+    }
+
+    if (_currentUser.value!.channels != null &&
+        !_currentUser.value!.channels!.contains(channel.id)) {
+      return;
+    }
+    await _userUseCase.leaveChannel(_currentUser.value!.id!, channel.id!);
+    await _channelUseCase.leaveChannel(channel.id!, _currentUser.value!.id!);
+
+    _currentUser.value!.channels!.remove(channel.id!);
+    _currentUser.refresh();
+
+    channel.users!.remove(_currentUser.value!.id!);
+
+    if (_currentChannel.value != null &&
+        _currentChannel.value!.id == channel.id) {
+      _currentChannel.value = null;
+      Get.offNamed(AppRoutes.home);
+    }
+  }
+
+  Future<void> checkMessages() async {
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
+      return Future.error('User or id is null');
+    }
+    if (_currentChannel.value == null || _currentChannel.value!.id == null) {
+      return Future.error('Channel or id is null');
+    }
+
+    _messageUseCase
+        .getMessageChanges(_currentChannel.value!.id!, _currentUser.value!.id!)
+        .listen((List<Message>? messages) {
+      _messages.value = messages;
+    });
+  }
+
+  Future<void> sendMessage(String text) async {
+    if (_currentUser.value == null || _currentUser.value!.id == null) {
+      return Future.error('User or id is null');
+    }
+    if (_currentChannel.value == null || _currentChannel.value!.id == null) {
+      return Future.error('Channel or id is null');
+    }
+    Message message = Message(
+        text: text,
+        senderId: _currentUser.value!.id!,
+        channelId: _currentChannel.value!.id!,
+        createdAt: DateTime.now(),
+        deleted: false,
+        id: null);
+
+    message = await _messageUseCase.createMessage(message);
+
+    _messages.value!.add(message);
+    _messages.refresh();
   }
 }

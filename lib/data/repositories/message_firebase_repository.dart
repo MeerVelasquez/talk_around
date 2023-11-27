@@ -1,4 +1,6 @@
+import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
+
 import 'package:talk_around/data/datasources/local/message_local_datasource.dart';
 import 'package:talk_around/data/datasources/remote/message_datasource.dart';
 import 'package:talk_around/services/network_service.dart';
@@ -10,6 +12,35 @@ class MessageFirebaseRepository implements MessageRepository {
   final MessageLocalDatasource _messageLocalDatasource =
       MessageLocalDatasource();
   final MessageDatasource _messageDatasource = MessageDatasource();
+
+  final Rx<Stream<List<Message>?>> _messageChanges =
+      Rx<Stream<List<Message>?>>(const Stream.empty());
+
+  String? _channelId;
+  String? _userId;
+
+  // MessageFirebaseRepository() {
+  //   _messageChanges.value =
+  //       _messageDatasource.messageChanges.stream.asBroadcastStream().asyncMap((user) {
+  //     if (user == null) {
+  //       return null;
+  //     } else {
+  //       return Message();
+  //     }
+  //   });
+  // }
+
+  @override
+  Stream<List<Message>?> getMessageChanges(String channelId, String userId) {
+    if (_channelId != channelId || _userId != userId) {
+      _channelId = channelId;
+      _userId = userId;
+      _messageChanges.value = _messageDatasource.messageChanges.stream
+          .asBroadcastStream()
+          .map((List<Message>? messages) => messages);
+    }
+    return _messageChanges.value;
+  }
 
   @override
   Future<List<Message>> getMessagesFromChannel(String channelId) async {

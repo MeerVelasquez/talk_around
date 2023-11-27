@@ -1,9 +1,47 @@
+// import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+
 import 'package:talk_around/domain/models/message.dart';
 
 class MessageDatasource {
+  // final firebase_auth.FirebaseAuth _inst = firebase_auth.FirebaseAuth.instance;
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _collection = 'message';
+
+  final Rx<List<Message>?> messageChanges = Rx<List<Message>?>(null);
+
+  void getMessageChanges(String channelId, String userId) {
+    _db
+        .collection(_collection)
+        .snapshots()
+        .listen((QuerySnapshot<Map<String, dynamic>> event) {
+      var asd = event.docs.map((doc) {
+        Map<String, dynamic> messageMap = doc.data() as Map<String, dynamic>;
+        messageMap['id'] = doc.id;
+        return Message.fromJson(messageMap);
+      }).where((element) {
+        return element.channelId == channelId;
+      }).where((element) {
+        return element.deleted == false;
+        // }).where((element) {
+        //   return element.senderId != userId;
+      }).toList();
+      asd.sort((a, b) {
+        if (a.createdAt != null && b.createdAt != null) {
+          return a.createdAt!.compareTo(b.createdAt!);
+        } else if (a.createdAt != null) {
+          return 1;
+        } else if (b.createdAt != null) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      messageChanges.value = asd;
+    });
+  }
 
   Future<List<Message>> getMessagesFromChannel(String channelId) async {
     QuerySnapshot query = await _db

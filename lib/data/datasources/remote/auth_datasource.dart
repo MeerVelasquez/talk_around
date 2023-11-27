@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:loggy/loggy.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-import 'package:talk_around/domain/models/user.dart';
-
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:loggy/loggy.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:talk_around/domain/models/user.dart';
 
 class AuthDatasource {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;

@@ -59,7 +59,10 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                           heroTag: 'mesage',
                           elevation: 0,
                           backgroundColor: Color(0xFF013E6A),
-                          label: const Text("Message"),
+                          label: const Text(
+                            "Message",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

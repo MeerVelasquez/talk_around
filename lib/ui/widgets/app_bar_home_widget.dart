@@ -29,17 +29,17 @@ class AppBarHomeWidget extends StatelessWidget implements PreferredSizeWidget {
             height: 50,
           ),
           centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: onPressedNotification,
-              icon: const Icon(
-                Icons.person_rounded,
-                // Icons.notifications,
-                color: Color(0xFF013E6A),
-                size: 30,
-              ),
-            ),
-          ],
+          // actions: [
+          //   IconButton(
+          //     onPressed: onPressedNotification,
+          //     icon: const Icon(
+          //       Icons.person_rounded,
+          //       // Icons.notifications,
+          //       color: Color(0xFF013E6A),
+          //       size: 30,
+          //     ),
+          //   ),
+          // ],
         ));
   }
 
