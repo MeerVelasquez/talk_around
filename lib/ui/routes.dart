@@ -25,6 +25,7 @@ List<GetPage<dynamic>> appRoutes() => [
       GetPage(
         name: AppRoutes.chat,
         page: () => const ChatPage(),
+
         // transition: Transition.leftToRightWithFade,
         // transitionDuration: Duration(milliseconds: 500),
         // middlewares: []
