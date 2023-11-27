@@ -194,50 +194,43 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
                         child: getMessages(),
                         constraints: BoxConstraints(maxHeight: 600),
                       ),
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                        child: Container(
-                          padding:
-                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                          height: 60,
-                          width: double.infinity,
-                          color: Color(0xffE7FCFD).withOpacity(0.7),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffC2DDE5),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: TextField(
-                                    controller: _textEditingController,
-                                    decoration: const InputDecoration(
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
-                                        hintText: "Write message...",
-                                        hintStyle:
-                                            TextStyle(color: Colors.black54),
-                                        border: InputBorder.none),
-                                  ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                        height: 60,
+                        width: double.infinity,
+                        color: Color(0xffE7FCFD).withOpacity(0.7),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Color(0xffC2DDE5),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: TextField(
+                                  controller: _textEditingController,
+                                  decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 10),
+                                      hintText: "Write message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 15,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            FloatingActionButton(
+                              onPressed: onSendMessage,
+                              child: Icon(
+                                Icons.send,
+                                color: Color(0xff013E6A),
+                                size: 18,
                               ),
-                              FloatingActionButton(
-                                onPressed: onSendMessage,
-                                child: Icon(
-                                  Icons.send,
-                                  color: Color(0xff013E6A),
-                                  size: 18,
-                                ),
-                                backgroundColor: Colors.white,
-                                elevation: 0,
-                              ),
-                            ],
-                          ),
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                            ),
+                          ],
                         ),
                       )
                     ]),
