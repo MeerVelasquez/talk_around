@@ -75,8 +75,10 @@ class BrandHeaderWidget extends StatelessWidget {
               // color: Colors.green,
               child: Image.asset(
                 'assets/img/graph_1 1.png',
+                fit: BoxFit.fitHeight,
+
                 // width: 160,
-                // height: 120,
+                height: 70,
               ),
             )
           ],

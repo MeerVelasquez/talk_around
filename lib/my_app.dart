@@ -5,17 +5,17 @@ import 'package:get/get.dart';
 
 import 'package:talk_around/ui/routes.dart';
 
-MaterialColor myPrimarySwatch = MaterialColor(0xFF997AC1, {
-  50: Color(0xFFF5EEF7),
-  100: Color(0xFFE4D6E5),
-  200: Color(0xFFD3BED4),
-  300: Color(0xFFC2A6C4),
-  400: Color(0xFFB18EB3),
-  500: Color(0xFF997AC1), // Este es el tono principal
-  600: Color(0xFF8A6CB0),
-  700: Color(0xFF7C5FA0),
-  800: Color(0xFF6D5190),
-  900: Color(0xFF5F4480),
+MaterialColor myPrimarySwatch = MaterialColor(0xFF013E6A, {
+  50: const Color(0xFFE0F2F7),
+  100: const Color(0xFFB3E0F2),
+  200: const Color(0xFF80CFEC),
+  300: const Color(0xFF4DBEE5),
+  400: const Color(0xFF26B0E0),
+  500: const Color(0xFF013E6A),
+  600: const Color(0xFF0099CC),
+  700: const Color(0xFF008AB3),
+  800: const Color(0xFF007A99),
+  900: const Color(0xFF006680),
 });
 
 class MyApp extends StatelessWidget {
