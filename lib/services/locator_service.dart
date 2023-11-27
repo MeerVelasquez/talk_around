@@ -90,10 +90,11 @@ class LocatorService {
   Future<void> stopStream() {
     if (_positionStreamSubscription != null) {
       _positionStreamSubscription!.cancel().catchError(logError);
-    } else {
-      logError("stopStream _positionStreamSubscription is null");
-      return Future.error("stopStream _positionStreamSubscription is null");
     }
+    // else {
+    //   logError("stopStream _positionStreamSubscription is null");
+    //   return Future.error("stopStream _positionStreamSubscription is null");
+    // }
     return Future.value();
   }
 

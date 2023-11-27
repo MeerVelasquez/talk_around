@@ -96,11 +96,9 @@ class ChannelLocalDatasource {
     final SharedPreferences prefs = await _getPrefs();
 
     final String? channelsString = prefs.getString(_channelsKey);
-    if (channelsString == null) {
-      return Future.error('No channels in local storage');
-    }
 
-    final List<dynamic> channelsList = jsonDecode(channelsString);
+    final List<dynamic> channelsList =
+        channelsString != null ? jsonDecode(channelsString) : [];
     final List<dynamic> newChannelsList = channelsList.map((channel) {
       if (channel['id'] == channelId) {
         final List<dynamic> usersList = channel['users'];
@@ -154,6 +152,7 @@ class ChannelLocalDatasource {
   // }
 
   Future<void> addChannelsIfNotExist(List<Channel> channels) async {
+    print('Add channels if not exist');
     final SharedPreferences prefs = await _getPrefs();
 
     final String? channelsString = prefs.getString(_channelsKey);

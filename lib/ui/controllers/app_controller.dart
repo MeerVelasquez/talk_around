@@ -73,8 +73,16 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
 
-    getCurrentUser().catchError(logError);
     _listenAuthChanges();
+    getCurrentUserInitial();
+  }
+
+  Future<void> getCurrentUserInitial() async {
+    try {
+      return await getCurrentUser();
+    } catch (err) {
+      logError(err);
+    }
   }
 
   void _listenAuthChanges() {
@@ -406,12 +414,14 @@ class AppController extends GetxController {
   }
 
   List<Channel> getFollowingChannels() {
+    if (_channels.value == null || _currentUser.value == null) return [];
     return _channels.value!
         .where((channel) => _currentUser.value!.channels!.contains(channel.id))
         .toList();
   }
 
   List<Channel> getExploreChannels() {
+    if (_channels.value == null || _currentUser.value == null) return [];
     return _channels.value!
         .where((channel) => !_currentUser.value!.channels!.contains(channel.id))
         .toList();

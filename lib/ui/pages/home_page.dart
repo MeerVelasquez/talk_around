@@ -28,8 +28,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     _appController.checkBottomNavbarSection();
 
-    _fetchData().catchError(logError);
-    _appController.checkGeoloc().catchError(logError);
+    _appController.checkGeoloc().then((value) {
+      return _fetchData();
+    }).catchError(logError);
   }
 
   Future<void> _fetchData() async {
@@ -87,9 +88,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    List<Channel> channelsFollowing = _appController.getFollowingChannels();
-    List<Channel> channelsExplore = _appController.getExploreChannels();
-
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBarHomeWidget(onPressedNotification: onPressedNotification),
@@ -120,6 +118,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       return const Center(child: CircularProgressIndicator());
                     }
 
+                    List<Channel> channelsFollowing =
+                        _appController.getFollowingChannels();
                     if (channelsFollowing.isEmpty) {
                       return Container(
                         height: 100,
@@ -160,6 +160,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       return const Center(child: CircularProgressIndicator());
                     }
 
+                    List<Channel> channelsExplore =
+                        _appController.getExploreChannels();
                     if (channelsExplore.isEmpty) {
                       return Container(
                         height: 100,
