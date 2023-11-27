@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "713313315249",
+    "project_id": "talk-around-app",
+    "storage_bucket": "talk-around-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713313315249:android:fcc00816add850b9eff590",
+        "android_client_info": {
+          "package_name": "com.un_mobile.talk_around"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713313315249-qlc6v0j5gnm7idheag7ofgs4scu46j3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfgUP3C_4dhTVZWCYttM5oRfZLYiZnaes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713313315249-qlc6v0j5gnm7idheag7ofgs4scu46j3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

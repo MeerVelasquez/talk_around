@@ -17,7 +17,8 @@ class MessageDatasource {
         .collection(_collection)
         .snapshots()
         .listen((QuerySnapshot<Map<String, dynamic>> event) {
-      var asd = event.docs.map((doc) {
+      print('Event received ${event.docs.length}}');
+      List<Message> messages = event.docs.map((doc) {
         Map<String, dynamic> messageMap = doc.data() as Map<String, dynamic>;
         messageMap['id'] = doc.id;
         return Message.fromJson(messageMap);
@@ -28,7 +29,8 @@ class MessageDatasource {
         // }).where((element) {
         //   return element.senderId != userId;
       }).toList();
-      asd.sort((a, b) {
+      print(messages.map((e) => e.toJson()).toList());
+      messages.sort((a, b) {
         if (a.createdAt != null && b.createdAt != null) {
           return a.createdAt!.compareTo(b.createdAt!);
         } else if (a.createdAt != null) {
@@ -39,7 +41,7 @@ class MessageDatasource {
           return 0;
         }
       });
-      messageChanges.value = asd;
+      messageChanges.value = messages;
     });
   }
 
@@ -56,6 +58,7 @@ class MessageDatasource {
   }
 
   Future<Message> createMessage(Message message) async {
+    print(message);
     DocumentReference docRef =
         await _db.collection(_collection).add(message.toJson());
     message.id = docRef.id;

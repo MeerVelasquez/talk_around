@@ -52,7 +52,7 @@ class MessageFirebaseRepository implements MessageRepository {
       }
       List<Message> messages =
           await _messageDatasource.getMessagesFromChannel(channelId);
-      await _messageLocalDatasource.addMessagesIfNotExist(true, messages);
+      // await _messageLocalDatasource.addMessagesIfNotExist(true, messages);
       return messages;
     } else {
       return await _messageLocalDatasource.getMessagesFromChannel(channelId);
@@ -68,11 +68,13 @@ class MessageFirebaseRepository implements MessageRepository {
         await createMissingMessages();
       }
       Message createdMessage = await _messageDatasource.createMessage(message);
-      await _messageLocalDatasource
-          .addMessagesIfNotExist(true, [createdMessage]);
+      print(createdMessage.toJson());
+      // await _messageLocalDatasource
+      // .addMessagesIfNotExist(true, [createdMessage]);
+      print(1);
       return createdMessage;
     } else {
-      await _messageLocalDatasource.addMessagesIfNotExist(false, [message]);
+      // await _messageLocalDatasource.addMessagesIfNotExist(false, [message]);
       return message;
     }
   }

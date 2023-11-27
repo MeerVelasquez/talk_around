@@ -45,12 +45,19 @@ class Message {
   }
 
   Map<String, dynamic> toJson() {
+    print(id);
+    print(text);
+    print(senderId);
+    print(channelId);
+    print(createdAt);
+    print(deleted);
+
     return {
       'id': id,
       'text': text,
       'senderId': senderId,
       'channelId': channelId,
-      'createdAt': createdAt.toString(),
+      'createdAt': createdAt?.toString() ?? "",
       'deleted': deleted,
     };
   }

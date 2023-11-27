@@ -40,19 +40,28 @@ class MessageLocalDatasource {
       bool isUpToDate, List<Message> messages) async {
     final SharedPreferences prefs = await _getPrefs();
 
+    print(1);
     final List<MessageStore> messagesStoreList = await _getMessagesStore();
+    print(2);
     for (final Message message in messages) {
+      print(3);
       try {
         final MessageStore messageStore = messagesStoreList
             .firstWhere((messageStore) => messageStore.data.id == message.id);
         if (isUpToDate && !messageStore.isUpToDate) {
           messageStore.isUpToDate = true;
         }
+        print(4);
       } catch (err) {
         // messageStore was not found
         messagesStoreList.add(MessageStore(message, isUpToDate));
       }
     }
+    print(5);
+
+    jsonEncode(
+        messagesStoreList.map((messageStore) => messageStore.data.toJson()));
+    print(6);
 
     await prefs.setString(
         _messagesKey,

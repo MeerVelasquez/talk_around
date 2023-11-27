@@ -58,6 +58,9 @@ class AppController extends GetxController {
   final Rx<List<Topic>?> _topics = Rx<List<Topic>?>(null);
   List<Topic>? get topics => _topics.value;
 
+  final Rx<List<User>?> _users = Rx<List<User>?>(null);
+  List<User>? get users => _users.value;
+
   final Rx<bool> _isDrawerOpen = Rx<bool>(false);
   bool get isDrawerOpen => _isDrawerOpen.value;
   set isDrawerOpen(bool value) => _isDrawerOpen.value = value;
@@ -311,9 +314,9 @@ class AppController extends GetxController {
     _user.value = await _userUseCase.getUser(id);
   }
 
-  Future<List<User>> getUsersFromChannel(String channelId) async {
-    return await _userUseCase.getUsersFromChannel(channelId);
-  }
+  // Future<List<User>> getUsersFromChannel(String channelId) async {
+  //   return await _userUseCase.getUsersFromChannel(channelId);
+  // }
 
   Future<User> updatePartialCurrentUser(
       {String? name,
@@ -358,6 +361,14 @@ class AppController extends GetxController {
 
   Future<void> fetchTopics() async {
     _topics.value = await _topicUseCase.getTopics();
+  }
+
+  Future<void> fetchUsersFromChannel() async {
+    if (_currentChannel.value == null || _currentChannel.value!.id == null) {
+      return Future.error('Channel or id is null');
+    }
+    _users.value =
+        await _userUseCase.getUsersFromChannel(_currentChannel.value!.id!);
   }
 
   Future<void> checkGeoloc() async {
@@ -436,6 +447,16 @@ class AppController extends GetxController {
         .toList();
   }
 
+  List<User> getUsersFromChannel() {
+    if (_users.value == null ||
+        _currentChannel.value == null ||
+        _currentChannel.value!.id == null ||
+        _currentChannel.value!.users == null) return [];
+    return _users.value!
+        .where((user) => _currentChannel.value!.users!.contains(user.id))
+        .toList();
+  }
+
   List<Channel> getExploreChannels() {
     if (_channels.value == null || _currentUser.value == null) return [];
     return _channels.value!
@@ -451,6 +472,8 @@ class AppController extends GetxController {
   Future<void> getOutChannel() async {
     _currentChannel.value = null;
     Get.back();
+    _users.value = null;
+    _messages.value = null;
     // Get.offNamed(AppRoutes.home);
   }
 
@@ -467,8 +490,12 @@ class AppController extends GetxController {
         _currentUser.value!.channels!.contains(channel.id)) {
       return;
     }
-    await _userUseCase.joinChannel(_currentUser.value!.id!, channel.id!);
-    await _channelUseCase.joinChannel(channel.id!, _currentUser.value!.id!);
+    try {
+      await _userUseCase.joinChannel(_currentUser.value!.id!, channel.id!);
+      await _channelUseCase.joinChannel(channel.id!, _currentUser.value!.id!);
+    } catch (err) {
+      logError(err);
+    }
 
     _currentUser.value!.channels!.add(channel.id!);
     _currentUser.refresh();
@@ -514,6 +541,9 @@ class AppController extends GetxController {
       return Future.error('Channel or id is null');
     }
 
+    _messages.value = await _messageUseCase
+        .getMessagesFromChannel(_currentChannel.value!.id!);
+
     _messageUseCase
         .getMessageChanges(_currentChannel.value!.id!, _currentUser.value!.id!)
         .listen((List<Message>? messages) {
@@ -522,6 +552,10 @@ class AppController extends GetxController {
   }
 
   Future<void> sendMessage(String text) async {
+    logInfo('Controller Send Message $text');
+    String parsedText = text.trim();
+    if (parsedText.isEmpty) return Future.error('Empty message');
+
     if (_currentUser.value == null || _currentUser.value!.id == null) {
       return Future.error('User or id is null');
     }
@@ -529,7 +563,7 @@ class AppController extends GetxController {
       return Future.error('Channel or id is null');
     }
     Message message = Message(
-        text: text,
+        text: parsedText,
         senderId: _currentUser.value!.id!,
         channelId: _currentChannel.value!.id!,
         createdAt: DateTime.now(),
@@ -538,7 +572,11 @@ class AppController extends GetxController {
 
     message = await _messageUseCase.createMessage(message);
 
-    _messages.value!.add(message);
+    if (_messages.value == null) {
+      _messages.value = [message];
+    } else {
+      _messages.value!.add(message);
+    }
     _messages.refresh();
   }
 }
