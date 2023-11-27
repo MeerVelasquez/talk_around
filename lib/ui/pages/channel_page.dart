@@ -172,73 +172,71 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       appBar: AppBarChannelWidget(),
-      body: SafeArea(
-          child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/img/fondo.png",
-              fit: BoxFit.cover,
-            ),
-          ),
-          Column(
-            children: [
-              Expanded(
-                // child: Container(),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ConstrainedBox(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    "assets/img/fondo.png",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Column(
+                  children: [
+                    Expanded(
+                      // child: Container(),
+                      child: ConstrainedBox(
                         child: getMessages(),
                         constraints: BoxConstraints(maxHeight: 600),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                        height: 60,
-                        width: double.infinity,
-                        color: Color(0xffE7FCFD).withOpacity(0.7),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Color(0xffC2DDE5),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: TextField(
-                                  controller: _textEditingController,
-                                  decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.only(left: 10),
-                                      hintText: "Write message...",
-                                      hintStyle:
-                                          TextStyle(color: Colors.black54),
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            FloatingActionButton(
-                              onPressed: onSendMessage,
-                              child: Icon(
-                                Icons.send,
-                                color: Color(0xff013E6A),
-                                size: 18,
-                              ),
-                              backgroundColor: Colors.white,
-                              elevation: 0,
-                            ),
-                          ],
-                        ),
-                      )
-                    ]),
-              ),
-            ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xffC2DDE5),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: TextField(
+                      controller: _textEditingController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10),
+                          hintText: "Write message...",
+                          hintStyle: TextStyle(color: Colors.black54),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                FloatingActionButton(
+                  onPressed: onSendMessage,
+                  child: Icon(
+                    Icons.send,
+                    color: Color(0xff013E6A),
+                    size: 18,
+                  ),
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                ),
+              ],
+            ),
           ),
         ],
-      )),
+      ),
     );
   }
 }
