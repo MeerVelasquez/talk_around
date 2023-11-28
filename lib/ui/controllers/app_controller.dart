@@ -289,6 +289,12 @@ class AppController extends GetxController {
         _currentUser.refresh();
 
         logInfo('Geoloc updated');
+
+        try {
+          await checkGeoloc();
+        } catch (err) {
+          logError(err);
+        }
       }
     } else {
       Future.error('Saving geoloc prefs requires user to be logged in');
