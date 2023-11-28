@@ -401,6 +401,12 @@ class AppController extends GetxController {
           _geolocPrefRadius.value = null;
         }
       }
+    } else {
+      if (_geolocChangesSubscription != null) {
+        await _geolocUseCase.stopStream();
+        _geolocChangesSubscription!.cancel();
+        _geolocChangesSubscription = null;
+      }
     }
   }
 
