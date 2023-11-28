@@ -38,6 +38,26 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
           _emailController.text.trim(), _passwordController.text);
     } catch (err) {
       logError(err);
+      if (_scaffoldKey.currentContext != null) {
+        showDialog(
+          context: _scaffoldKey.currentContext!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Sign in failed"),
+              content:
+                  const Text("Please check your credentials and try again."),
+              actions: [
+                TextButton(
+                  child: const Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
       return;
     }
   }
@@ -51,6 +71,26 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
       await _appController.signInWithGoogle();
     } catch (err) {
       logError(err);
+      if (_scaffoldKey.currentContext != null) {
+        showDialog(
+          context: _scaffoldKey.currentContext!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Sign in failed"),
+              content:
+                  const Text("Please check your credentials and try again."),
+              actions: [
+                TextButton(
+                  child: const Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
       return;
     }
   }

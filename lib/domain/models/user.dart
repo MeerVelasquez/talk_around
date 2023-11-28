@@ -36,7 +36,7 @@ class User {
         email = '',
         username = '',
         password = null,
-        geolocEnabled = true,
+        geolocEnabled = false,
         prefGeolocRadius = 0,
         lat = 0,
         lng = 0,
@@ -54,7 +54,7 @@ class User {
     try {
       geolocEnabled = json['geolocEnabled'];
     } catch (err) {
-      geolocEnabled = true;
+      geolocEnabled = false;
       logError('User.fromJson: geolocEnabled: $err');
     }
 

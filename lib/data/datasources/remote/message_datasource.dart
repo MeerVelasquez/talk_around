@@ -100,6 +100,6 @@ class MessageDatasource {
       }
     });
     print(messages.map((e) => e.text).toList());
-    return messages;
+    return messages.reversed.take(100).toList().reversed.toList();
   }
 }
