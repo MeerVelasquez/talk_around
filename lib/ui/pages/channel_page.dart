@@ -29,6 +29,10 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    // Future.delayed(const Duration(milliseconds: 500), () {
+    //   _scrollToBottom();
+    // });
+
     checkMessages();
     fetchUsersFromChannel();
 
@@ -36,14 +40,12 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
         _appController.messagesPublic.listen((List<Message>? messages) {
       print('scrolling');
       _messages.value = messages;
-      // _messages.refresh();
+      _messages.refresh();
       print(_messages.value?.map((e) => e.text).toList());
       if (messages != null) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _scrollToBottom();
+        });
       }
     });
   }
@@ -52,6 +54,14 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     _messageSubscription?.cancel();
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   Future<void> checkMessages() async {
@@ -88,6 +98,7 @@ class _ChannelPageState extends State<ChannelPage> with WidgetsBindingObserver {
 
   Widget getMessages() {
     return Obx(() {
+      print('NEW OBX UPDATE HAHAHHA');
       if (_messages.value == null) {
         return const Center(
           child: CircularProgressIndicator(),
