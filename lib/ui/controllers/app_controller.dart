@@ -535,6 +535,7 @@ class AppController extends GetxController {
   }
 
   Future<void> checkMessages() async {
+    logInfo('Controller Check Messages');
     if (_currentUser.value == null || _currentUser.value!.id == null) {
       return Future.error('User or id is null');
     }
@@ -542,12 +543,18 @@ class AppController extends GetxController {
       return Future.error('Channel or id is null');
     }
 
+    // print('Getting messages from channel ${_currentChannel.value!.id}');
+
     _messages.value = await _messageUseCase
         .getMessagesFromChannel(_currentChannel.value!.id!);
+
+// print('Received ${_messages.value != null ? _messages.value!.length : 'null'} messages');
 
     _messageUseCase
         .getMessageChanges(_currentChannel.value!.id!, _currentUser.value!.id!)
         .listen((List<Message>? messages) {
+      print(
+          'STREAM: Receiving ${messages != null ? messages.length : 'null'} messages');
       _messages.value = messages;
     });
   }
@@ -577,7 +584,7 @@ class AppController extends GetxController {
       _messages.value = [message];
     } else {
       _messages.value!.add(message);
+      _messages.refresh();
     }
-    _messages.refresh();
   }
 }

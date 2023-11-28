@@ -50,11 +50,24 @@ class AppBarChannelWidget extends StatelessWidget
               padding: const EdgeInsets.only(right: 16),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: onGoBack,
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Color(0xffE7FCFD),
+                  // IconButton(
+                  //   onPressed: onGoBack,
+                  //   icon: Icon(
+                  //     Icons.arrow_back,
+                  //     color: Color(0xffE7FCFD),
+                  //   ),
+                  // ),
+                  InkWell(
+                    onTap: onGoBack,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0x013E6A).withOpacity(1)),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Color(0xffE7FCFD),
+                      ),
                     ),
                   ),
                   const SizedBox(
